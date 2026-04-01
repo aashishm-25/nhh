@@ -3,42 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CareSightAI — Intelligent Patient Monitoring</title>
+<title>CareSightAI — Intelligent Patient Monitoring (Light)</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script>
-tailwind.config={theme:{extend:{colors:{brand:{400:'#1affba',500:'#00d4aa',600:'#00a888',700:'#007d66'},sf:{900:'#070b12',800:'#0d1320',700:'#131c2d',600:'#1a2540',500:'#243050',400:'#2e3d5a'}},fontFamily:{display:['Outfit','sans-serif'],body:['DM Sans','sans-serif']}}}}
+tailwind.config={theme:{extend:{colors:{brand:{400:'#1affba',500:'#00d4aa',600:'#00a888',700:'#007d66'},sf:{900:'#111827',800:'#1f2937',700:'#374151',600:'#4b5563',500:'#6b7280',400:'#9ca3af'}},fontFamily:{display:['Outfit','sans-serif'],body:['DM Sans','sans-serif']}}}}
 </script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'DM Sans',sans-serif;background:#070b12;color:#e8edf4;overflow:hidden;height:100vh}
+body{font-family:'DM Sans',sans-serif;background:#f3f4f6;color:#111827;overflow:hidden;height:100vh}
 h1,h2,h3,h4,h5,h6{font-family:'Outfit',sans-serif}
 ::-webkit-scrollbar{width:5px}
-::-webkit-scrollbar-track{background:#0d1320}
-::-webkit-scrollbar-thumb{background:#243050;border-radius:4px}
+::-webkit-scrollbar-track{background:#f9fafb}
+::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:4px}
 
-.sidebar{width:240px;background:#0d1320;border-right:1px solid #1a2540;display:flex;flex-direction:column;height:100vh;position:fixed;left:0;top:0;z-index:50}
-.sidebar .logo{padding:24px 20px;border-bottom:1px solid #1a2540}
-.nav-item{display:flex;align-items:center;gap:12px;padding:12px 20px;cursor:pointer;transition:all .2s;color:#6b7d95;border-left:3px solid transparent;font-size:14px}
-.nav-item:hover{background:#131c2d;color:#e8edf4}
-.nav-item.active{background:rgba(0,212,170,.08);color:#00d4aa;border-left-color:#00d4aa}
+.sidebar{width:240px;background:#ffffff;border-right:1px solid #e5e7eb;display:flex;flex-direction:column;height:100vh;position:fixed;left:0;top:0;z-index:50}
+.sidebar .logo{padding:24px 20px;border-bottom:1px solid #e5e7eb}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 20px;cursor:pointer;transition:all .2s;color:#4b5563;border-left:3px solid transparent;font-size:14px;font-weight:500}
+.nav-item:hover{background:#f9fafb;color:#111827}
+.nav-item.active{background:rgba(0,212,170,.1);color:#00a888;border-left-color:#00d4aa}
 
 .main{margin-left:240px;height:100vh;display:flex;flex-direction:column}
-.topbar{height:60px;background:#0d1320;border-right:1px solid #1a2540;border-bottom:1px solid #1a2540;display:flex;align-items:center;justify-content:space-between;padding:0 28px;flex-shrink:0}
-.content{flex:1;overflow-y:auto;padding:28px;background:radial-gradient(ellipse at 20% 0%,rgba(0,212,170,.03) 0%,transparent 60%),radial-gradient(ellipse at 80% 100%,rgba(0,100,80,.03) 0%,transparent 60%),#070b12}
+.topbar{height:60px;background:#ffffff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 28px;flex-shrink:0}
+.content{flex:1;overflow-y:auto;padding:28px;background:radial-gradient(ellipse at 20% 0%,rgba(0,212,170,.05) 0%,transparent 60%),radial-gradient(ellipse at 80% 100%,rgba(0,100,80,.05) 0%,transparent 60%),#f3f4f6}
 
 .view{display:none}.view.active{display:block}
 
-.stat-card{background:#0d1320;border:1px solid #1a2540;border-radius:12px;padding:20px;transition:all .3s}
-.stat-card:hover{border-color:#243050;transform:translateY(-2px)}
+.stat-card{background:#ffffff;border:1px solid #e5e7eb;border-radius:12px;padding:20px;transition:all .3s;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+.stat-card:hover{border-color:#d1d5db;transform:translateY(-2px);box-shadow:0 4px 6px rgba(0,0,0,0.05)}
 .icon-box{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
 
-.patient-card{background:#0d1320;border:1px solid #1a2540;border-radius:14px;padding:20px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
-.patient-card:hover{border-color:#243050;transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.patient-card{background:#ffffff;border:1px solid #e5e7eb;border-radius:14px;padding:20px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;box-shadow:0 2px 4px rgba(0,0,0,0.02)}
+.patient-card:hover{border-color:#d1d5db;transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.08)}
 .patient-card.critical{border-color:rgba(255,71,87,.4);animation:critPulse 2s ease-in-out infinite}
-.patient-card.critical::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,71,87,.06),transparent 60%);pointer-events:none}
-.patient-card.medium{border-color:rgba(255,165,2,.3)}
+.patient-card.critical::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,71,87,.04),transparent 60%);pointer-events:none}
+.patient-card.medium{border-color:rgba(255,165,2,.4)}
 .patient-card.medium::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,165,2,.04),transparent 60%);pointer-events:none}
 
 @keyframes critPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,71,87,.15)}50%{box-shadow:0 0 20px 4px rgba(255,71,87,.1)}}
@@ -50,9 +50,9 @@ h1,h2,h3,h4,h5,h6{font-family:'Outfit',sans-serif}
 @keyframes recBlink{0%,100%{opacity:1}50%{opacity:.2}}
 
 .risk-badge{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
-.risk-low{background:rgba(0,212,170,.12);color:#00d4aa}
-.risk-medium{background:rgba(255,165,2,.12);color:#ffa502}
-.risk-high{background:rgba(255,71,87,.12);color:#ff4757}
+.risk-low{background:rgba(0,212,170,.15);color:#00a888}
+.risk-medium{background:rgba(255,165,2,.15);color:#d98200}
+.risk-high{background:rgba(255,71,87,.15);color:#e83e4c}
 
 .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
 .dot.on{background:#00d4aa;box-shadow:0 0 6px rgba(0,212,170,.5)}
@@ -60,69 +60,69 @@ h1,h2,h3,h4,h5,h6{font-family:'Outfit',sans-serif}
 
 .gauge-ring{transition:stroke-dashoffset .8s ease}
 
-.fi{background:#0d1320;border:1px solid #1a2540;border-radius:8px;padding:10px 14px;color:#e8edf4;font-size:14px;width:100%;transition:border-color .2s;font-family:'DM Sans',sans-serif}
-.fi:focus{outline:none;border-color:#00d4aa}
-.fi::placeholder{color:#4a5a70}
+.fi{background:#f9fafb;border:1px solid #d1d5db;border-radius:8px;padding:10px 14px;color:#111827;font-size:14px;width:100%;transition:border-color .2s;font-family:'DM Sans',sans-serif}
+.fi:focus{outline:none;border-color:#00d4aa;background:#ffffff}
+.fi::placeholder{color:#9ca3af}
 select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236b7d95' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
-select.fi option{background:#0d1320;color:#e8edf4}
+select.fi option{background:#ffffff;color:#111827}
 
-.pill{display:inline-flex;padding:6px 16px;border-radius:8px;font-size:13px;cursor:pointer;transition:all .2s;border:1px solid #1a2540;background:#0d1320;color:#6b7d95;user-select:none}
-.pill.on{background:rgba(255,71,87,.12);border-color:rgba(255,71,87,.3);color:#ff4757}
+.pill{display:inline-flex;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;border:1px solid #e5e7eb;background:#ffffff;color:#4b5563;user-select:none}
+.pill.on{background:rgba(255,71,87,.1);border-color:rgba(255,71,87,.4);color:#e83e4c}
 
-.mob-card{padding:14px;border-radius:10px;border:1px solid #1a2540;background:#0d1320;cursor:pointer;transition:all .2s;text-align:center;flex:1}
-.mob-card:hover{border-color:#243050}
+.mob-card{padding:14px;border-radius:10px;border:1px solid #e5e7eb;background:#ffffff;cursor:pointer;transition:all .2s;text-align:center;flex:1}
+.mob-card:hover{border-color:#d1d5db;background:#f9fafb}
 .mob-card.sel{border-color:#00d4aa;background:rgba(0,212,170,.06)}
 
 .btn{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;font-size:14px;transition:all .2s}
-.btn-p{background:#00d4aa;color:#070b12;font-weight:600;padding:12px 28px;border-radius:10px}
-.btn-p:hover{background:#1affba;transform:translateY(-1px);box-shadow:0 4px 15px rgba(0,212,170,.3)}
-.btn-s{background:#131c2d;color:#e8edf4;font-weight:500;padding:10px 20px;border-radius:10px;border:1px solid #1a2540}
-.btn-s:hover{border-color:#243050;background:#1a2540}
+.btn-p{background:#00d4aa;color:#ffffff;font-weight:600;padding:12px 28px;border-radius:10px}
+.btn-p:hover{background:#00a888;transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,212,170,.2)}
+.btn-s{background:#ffffff;color:#4b5563;font-weight:600;padding:10px 20px;border-radius:10px;border:1px solid #d1d5db}
+.btn-s:hover{border-color:#9ca3af;background:#f3f4f6;color:#111827}
 .btn-sm{padding:7px 14px;font-size:12px;border-radius:8px}
 
 .toast-box{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px;pointer-events:none}
-.toast{pointer-events:auto;padding:14px 18px;border-radius:10px;display:flex;align-items:flex-start;gap:12px;min-width:320px;max-width:420px;animation:slideIn .4s ease;border:1px solid;backdrop-filter:blur(12px)}
-.toast.out{animation:slideOut .3s ease forwards}
-.toast-critical{background:rgba(255,71,87,.12);border-color:rgba(255,71,87,.25);color:#ff8a94}
-.toast-warning{background:rgba(255,165,2,.12);border-color:rgba(255,165,2,.25);color:#ffc04d}
-.toast-info{background:rgba(0,212,170,.12);border-color:rgba(0,212,170,.25);color:#66e8cc}
+.toast{pointer-events:auto;padding:14px 18px;border-radius:10px;display:flex;align-items:flex-start;gap:12px;min-width:320px;max-width:420px;animation:slideIn .4s ease;border:1px solid;backdrop-filter:blur(12px);background:rgba(255,255,255,0.9)}
+.toast.out{animation:slideOut .3s forwards}
+.toast-critical{border-color:rgba(255,71,87,.4);color:#e83e4c}
+.toast-warning{border-color:rgba(255,165,2,.4);color:#d98200}
+.toast-info{border-color:rgba(0,212,170,.4);color:#00a888}
 
-.modal-bg{position:fixed;inset:0;background:rgba(4,6,10,.8);backdrop-filter:blur(6px);z-index:100;display:none;align-items:center;justify-content:center}
+.modal-bg{position:fixed;inset:0;background:rgba(17,24,39,.6);backdrop-filter:blur(4px);z-index:100;display:none;align-items:center;justify-content:center}
 .modal-bg.show{display:flex}
-.modal-inner{background:#0d1320;border:1px solid #1a2540;border-radius:16px;max-width:920px;width:95%;max-height:90vh;overflow-y:auto;animation:fadeIn .3s ease}
+.modal-inner{background:#ffffff;border:1px solid #e5e7eb;border-radius:16px;max-width:920px;width:95%;max-height:90vh;overflow-y:auto;animation:fadeIn .3s ease;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1)}
 
-.alert-row{display:flex;align-items:center;gap:16px;padding:16px 20px;border-radius:10px;border:1px solid #1a2540;background:#0d1320;transition:all .2s}
-.alert-row:hover{background:#131c2d}
-.alert-critical{border-color:rgba(255,71,87,.3);background:rgba(255,71,87,.04)}
-.alert-warning{border-color:rgba(255,165,2,.3);background:rgba(255,165,2,.04)}
+.alert-row{display:flex;align-items:center;gap:16px;padding:16px 20px;border-radius:10px;border:1px solid #e5e7eb;background:#ffffff;transition:all .2s;box-shadow:0 1px 2px rgba(0,0,0,0.02)}
+.alert-row:hover{background:#f9fafb;border-color:#d1d5db}
+.alert-critical{border-color:rgba(255,71,87,.3);background:rgba(255,71,87,.02)}
+.alert-warning{border-color:rgba(255,165,2,.3);background:rgba(255,165,2,.02)}
 
-.vbox{position:relative;border-radius:12px;overflow:hidden;background:#000;aspect-ratio:4/3;border:1px solid #1a2540}
+.vbox{position:relative;border-radius:12px;overflow:hidden;background:#111827;aspect-ratio:4/3;border:1px solid #d1d5db;box-shadow:0 4px 6px rgba(0,0,0,0.1)}
 .vbox canvas,.vbox video{position:absolute;top:0;left:0;width:100%;height:100%}
 
-.mbar{height:6px;border-radius:3px;background:#131c2d;overflow:hidden}
-.mbar-fill{height:100%;border-radius:3px;transition:width .15s;background:#00d4aa}
+.mbar{height:8px;border-radius:4px;background:#e5e7eb;overflow:hidden}
+.mbar-fill{height:100%;border-radius:4px;transition:width .15s;background:#00d4aa}
 
-.mtab{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;border:1px solid #1a2540;background:#0d1320;color:#6b7d95;font-family:'DM Sans',sans-serif}
-.mtab.active{background:rgba(0,212,170,.1);border-color:rgba(0,212,170,.3);color:#00d4aa}
-.mtab:hover:not(.active){background:#131c2d;color:#e8edf4}
+.mtab{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid #e5e7eb;background:#ffffff;color:#6b7280;font-family:'DM Sans',sans-serif}
+.mtab.active{background:rgba(0,212,170,.1);border-color:rgba(0,212,170,.4);color:#00a888}
+.mtab:hover:not(.active){background:#f3f4f6;color:#111827}
 
-.upload-zone{border:2px dashed #243050;border-radius:12px;padding:40px 20px;text-align:center;cursor:pointer;transition:all .2s}
-.upload-zone:hover{border-color:#00d4aa;background:rgba(0,212,170,.03)}
+.upload-zone{border:2px dashed #d1d5db;border-radius:12px;padding:40px 20px;text-align:center;cursor:pointer;transition:all .2s;background:#ffffff}
+.upload-zone:hover{border-color:#00d4aa;background:#f0fdfa}
 
-.sc-btn{padding:8px 14px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid #1a2540;background:#0d1320;color:#6b7d95;font-family:'DM Sans',sans-serif;text-transform:uppercase;letter-spacing:.5px}
-.sc-btn.active{border-color:#00d4aa;color:#00d4aa;background:rgba(0,212,170,.08)}
-.sc-btn.danger{border-color:#ff4757;color:#ff4757;background:rgba(255,71,87,.08)}
+.sc-btn{padding:8px 14px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;border:1px solid #e5e7eb;background:#ffffff;color:#6b7280;font-family:'DM Sans',sans-serif;text-transform:uppercase;letter-spacing:.5px}
+.sc-btn.active{border-color:#00d4aa;color:#00a888;background:rgba(0,212,170,.1)}
+.sc-btn.danger{border-color:#ff4757;color:#e83e4c;background:rgba(255,71,87,.1)}
 
-.ptag{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;background:rgba(0,212,170,.1);color:#00d4aa;border:1px solid rgba(0,212,170,.2)}
+.ptag{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;background:rgba(0,212,170,.15);color:#00a888;border:1px solid rgba(0,212,170,.3)}
 .pz-hot{animation:glow 2s ease-in-out infinite}
 
-.slider{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:2px;background:#1a2540;outline:none}
-.slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:#00d4aa;cursor:pointer;box-shadow:0 0 8px rgba(0,212,170,.3)}
+.slider{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:#e5e7eb;outline:none}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:#00d4aa;cursor:pointer;box-shadow:0 0 6px rgba(0,212,170,.4)}
 
-.bed-sel-card{background:#0d1320;border:1px solid #1a2540;border-radius:12px;padding:20px;margin-bottom:20px}
-.bed-chip{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;border:1px solid #1a2540;background:#0d1320;cursor:pointer;transition:all .2s}
-.bed-chip:hover{border-color:#243050;background:#131c2d}
-.bed-chip.sel{border-color:#00d4aa;background:rgba(0,212,170,.08)}
+.bed-sel-card{background:#ffffff;border:1px solid #e5e7eb;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,0.03)}
+.bed-chip{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;border:1px solid #e5e7eb;background:#ffffff;cursor:pointer;transition:all .2s}
+.bed-chip:hover{border-color:#d1d5db;background:#f9fafb}
+.bed-chip.sel{border-color:#00d4aa;background:rgba(0,212,170,.1)}
 
 @media(max-width:900px){.sidebar{display:none}.main{margin-left:0}}
 </style>
@@ -132,22 +132,22 @@ select.fi option{background:#0d1320;color:#e8edf4}
 <aside class="sidebar">
   <div class="logo">
     <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-lg bg-brand-500/15 flex items-center justify-center"><i class="fas fa-heartbeat text-brand-500 text-base"></i></div>
-      <div><h1 class="font-display font-bold text-[15px] text-white leading-tight">CareSightAI</h1><p class="text-[10px] text-[#6b7d95] tracking-wider uppercase">Patient Monitor</p></div>
+      <div class="w-9 h-9 rounded-lg bg-brand-500/20 flex items-center justify-center"><i class="fas fa-heartbeat text-brand-600 text-base"></i></div>
+      <div><h1 class="font-display font-bold text-[15px] text-gray-900 leading-tight">CareSightAI</h1><p class="text-[10px] text-gray-500 tracking-wider uppercase font-semibold">Patient Monitor</p></div>
     </div>
   </div>
   <nav class="flex-1 py-4">
-    <div class="px-5 mb-2"><span class="text-[10px] font-semibold text-[#4a5a70] uppercase tracking-widest">Main</span></div>
+    <div class="px-5 mb-2"><span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Main</span></div>
     <div class="nav-item active" data-view="dashboard"><i class="fas fa-th-large"></i>Dashboard</div>
     <div class="nav-item" data-view="add-patient"><i class="fas fa-user-plus"></i>Add Patient</div>
     <div class="nav-item" data-view="monitoring"><i class="fas fa-video"></i>Monitoring</div>
-    <div class="px-5 mt-5 mb-2"><span class="text-[10px] font-semibold text-[#4a5a70] uppercase tracking-widest">System</span></div>
-    <div class="nav-item" data-view="alerts"><i class="fas fa-bell"></i>Alerts <span id="alert-badge" class="ml-auto bg-red-500/20 text-red-400 text-[10px] font-bold px-2 py-0.5 rounded-full hidden">0</span></div>
+    <div class="px-5 mt-5 mb-2"><span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">System</span></div>
+    <div class="nav-item" data-view="alerts"><i class="fas fa-bell"></i>Alerts <span id="alert-badge" class="ml-auto bg-red-100 text-red-600 border border-red-200 text-[10px] font-bold px-2 py-0.5 rounded-full hidden">0</span></div>
   </nav>
-  <div class="p-4 border-t border-[#1a2540]">
+  <div class="p-4 border-t border-gray-200 bg-gray-50">
     <div class="flex items-center gap-3 px-2">
-      <div class="w-8 h-8 rounded-full bg-sf-600 flex items-center justify-center"><i class="fas fa-user-nurse text-xs text-brand-500"></i></div>
-      <div><p class="text-xs font-medium text-white">Nurse Station</p><p class="text-[10px] text-[#6b7d95]">Ward A — ICU</p></div>
+      <div class="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-sm"><i class="fas fa-user-nurse text-xs text-brand-600"></i></div>
+      <div><p class="text-xs font-bold text-gray-800">Nurse Station</p><p class="text-[10px] text-gray-500 font-medium">Ward A — ICU</p></div>
     </div>
   </div>
 </aside>
@@ -155,145 +155,135 @@ select.fi option{background:#0d1320;color:#e8edf4}
 <div class="main">
   <header class="topbar">
     <div class="flex items-center gap-4">
-      <h2 class="font-display font-semibold text-sm" id="page-title">Dashboard</h2>
-      <div class="flex items-center gap-2 ml-4 px-3 py-1 rounded-full bg-brand-500/8 border border-brand-500/20"><span class="dot on"></span><span class="text-[11px] text-brand-500 font-medium">System Active</span></div>
+      <h2 class="font-display font-bold text-lg text-gray-900" id="page-title">Dashboard</h2>
+      <div class="flex items-center gap-2 ml-4 px-3 py-1 rounded-full bg-brand-50 border border-brand-200"><span class="dot on w-2 h-2"></span><span class="text-[11px] text-brand-700 font-bold">System Active</span></div>
     </div>
     <div class="flex items-center gap-4">
-      <span class="text-xs text-[#6b7d95]" id="live-clock"></span>
-      <button onclick="toggleSound()" id="sound-btn" class="w-8 h-8 rounded-lg bg-sf-700 border border-[#1a2540] flex items-center justify-center text-[#6b7d95] hover:text-white transition-colors cursor-pointer"><i class="fas fa-volume-up text-xs"></i></button>
+      <span class="text-xs font-semibold text-gray-500" id="live-clock"></span>
+      <button onclick="toggleSound()" id="sound-btn" class="w-8 h-8 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-600 hover:text-gray-900 hover:bg-gray-200 transition-colors cursor-pointer"><i class="fas fa-volume-up text-xs"></i></button>
     </div>
   </header>
 
   <div class="content">
 
-    <!-- DASHBOARD -->
     <div class="view active" id="view-dashboard">
       <div class="grid grid-cols-4 gap-4 mb-6">
-        <div class="stat-card"><div class="flex items-center justify-between mb-3"><div class="icon-box bg-brand-500/10 text-brand-500"><i class="fas fa-bed"></i></div><span class="text-[11px] text-[#6b7d95]">Total</span></div><p class="font-display font-bold text-2xl text-white" id="s-total">0</p><p class="text-xs text-[#6b7d95] mt-1">Patients Monitored</p></div>
-        <div class="stat-card"><div class="flex items-center justify-between mb-3"><div class="icon-box bg-red-500/10 text-red-400"><i class="fas fa-exclamation-triangle"></i></div><span class="text-[11px] text-[#6b7d95]">Critical</span></div><p class="font-display font-bold text-2xl text-red-400" id="s-crit">0</p><p class="text-xs text-[#6b7d95] mt-1">High Risk</p></div>
-        <div class="stat-card"><div class="flex items-center justify-between mb-3"><div class="icon-box bg-yellow-500/10 text-yellow-400"><i class="fas fa-exclamation-circle"></i></div><span class="text-[11px] text-[#6b7d95]">Warning</span></div><p class="font-display font-bold text-2xl text-yellow-400" id="s-warn">0</p><p class="text-xs text-[#6b7d95] mt-1">Medium Risk</p></div>
-        <div class="stat-card"><div class="flex items-center justify-between mb-3"><div class="icon-box bg-brand-500/10 text-brand-500"><i class="fas fa-check-circle"></i></div><span class="text-[11px] text-[#6b7d95]">Stable</span></div><p class="font-display font-bold text-2xl text-brand-500" id="s-safe">0</p><p class="text-xs text-[#6b7d95] mt-1">Low Risk</p></div>
+        <div class="stat-card"><div class="flex items-center justify-between mb-3"><div class="icon-box bg-brand-50 text-brand-600"><i class="fas fa-bed"></i></div><span class="text-[11px] font-bold text-gray-400 uppercase">Total</span></div><p class="font-display font-bold text-3xl text-gray-900" id="s-total">0</p><p class="text-xs font-medium text-gray-500 mt-1">Patients Monitored</p></div>
+        <div class="stat-card"><div class="flex items-center justify-between mb-3"><div class="icon-box bg-red-50 text-red-500"><i class="fas fa-exclamation-triangle"></i></div><span class="text-[11px] font-bold text-gray-400 uppercase">Critical</span></div><p class="font-display font-bold text-3xl text-red-500" id="s-crit">0</p><p class="text-xs font-medium text-gray-500 mt-1">High Risk</p></div>
+        <div class="stat-card"><div class="flex items-center justify-between mb-3"><div class="icon-box bg-yellow-50 text-yellow-500"><i class="fas fa-exclamation-circle"></i></div><span class="text-[11px] font-bold text-gray-400 uppercase">Warning</span></div><p class="font-display font-bold text-3xl text-yellow-500" id="s-warn">0</p><p class="text-xs font-medium text-gray-500 mt-1">Medium Risk</p></div>
+        <div class="stat-card"><div class="flex items-center justify-between mb-3"><div class="icon-box bg-brand-50 text-brand-600"><i class="fas fa-check-circle"></i></div><span class="text-[11px] font-bold text-gray-400 uppercase">Stable</span></div><p class="font-display font-bold text-3xl text-brand-600" id="s-safe">0</p><p class="text-xs font-medium text-gray-500 mt-1">Low Risk</p></div>
       </div>
       <div class="flex items-center justify-between mb-4">
-        <h3 class="font-display font-semibold text-base text-white">Patient Beds</h3>
-        <div class="flex items-center gap-3 text-[11px] text-[#6b7d95]"><span><span class="inline-block w-2 h-2 rounded-full bg-brand-500 mr-1"></span>Low</span><span><span class="inline-block w-2 h-2 rounded-full bg-yellow-400 mr-1"></span>Medium</span><span><span class="inline-block w-2 h-2 rounded-full bg-red-400 mr-1"></span>High</span></div>
+        <h3 class="font-display font-bold text-lg text-gray-900">Patient Beds</h3>
+        <div class="flex items-center gap-3 text-[11px] font-bold text-gray-500 uppercase"><span><span class="inline-block w-2.5 h-2.5 rounded-full bg-brand-500 mr-1"></span>Low</span><span><span class="inline-block w-2.5 h-2.5 rounded-full bg-yellow-400 mr-1"></span>Medium</span><span><span class="inline-block w-2.5 h-2.5 rounded-full bg-red-500 mr-1"></span>High</span></div>
       </div>
-      <div class="grid grid-cols-3 gap-4" id="p-grid"></div>
-      <div id="empty-state" class="hidden text-center py-20"><i class="fas fa-procedures text-4xl text-[#243050] mb-4"></i><p class="text-[#4a5a70] text-sm">No patients registered yet</p><button onclick="goTo('add-patient')" class="btn btn-p mt-4 text-sm">Add First Patient</button></div>
+      <div class="grid grid-cols-3 gap-5" id="p-grid"></div>
+      <div id="empty-state" class="hidden text-center py-20 bg-white border border-gray-200 rounded-xl"><i class="fas fa-procedures text-4xl text-gray-300 mb-4"></i><p class="text-gray-500 text-sm font-medium">No patients registered yet</p><button onclick="goTo('add-patient')" class="btn btn-p mt-4 text-sm">Add First Patient</button></div>
     </div>
 
-    <!-- ADD PATIENT -->
     <div class="view" id="view-add-patient">
-      <div class="max-w-2xl">
-        <h3 class="font-display font-bold text-xl text-white mb-1">Patient Intake</h3>
-        <p class="text-sm text-[#6b7d95] mb-6">Enter patient details to begin monitoring</p>
+      <div class="max-w-2xl bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
+        <h3 class="font-display font-bold text-2xl text-gray-900 mb-1">Patient Intake</h3>
+        <p class="text-sm font-medium text-gray-500 mb-6">Enter patient details to begin monitoring</p>
         <form id="p-form" onsubmit="handleForm(event)">
-          <div class="grid grid-cols-2 gap-4 mb-4"><div><label class="text-xs font-medium text-[#8899aa] mb-1.5 block">Bed Number</label><input type="text" id="f-bed" class="fi" placeholder="e.g. BED-05" required></div><div><label class="text-xs font-medium text-[#8899aa] mb-1.5 block">Full Name</label><input type="text" id="f-name" class="fi" placeholder="Patient name" required></div></div>
-          <div class="grid grid-cols-2 gap-4 mb-4"><div><label class="text-xs font-medium text-[#8899aa] mb-1.5 block">Age</label><input type="number" id="f-age" class="fi" placeholder="Years" min="1" max="120" required></div><div><label class="text-xs font-medium text-[#8899aa] mb-1.5 block">Gender</label><select id="f-gender" class="fi" required><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div></div>
-          <div class="grid grid-cols-2 gap-4 mb-4"><div><label class="text-xs font-medium text-[#8899aa] mb-1.5 block">Height (cm)</label><input type="number" id="f-ht" class="fi" placeholder="170" min="50" max="250" required></div><div><label class="text-xs font-medium text-[#8899aa] mb-1.5 block">Weight (kg)</label><input type="number" id="f-wt" class="fi" placeholder="70" min="10" max="300" required></div></div>
-          <div class="mb-5 p-3 rounded-lg bg-sf-700/50 border border-[#1a2540] flex items-center gap-3"><span class="text-xs text-[#6b7d95]">Auto-calculated BMI:</span><span class="font-display font-bold text-lg text-white" id="live-bmi">--</span><span class="text-xs text-[#6b7d95]" id="bmi-cat"></span></div>
-          <div class="mb-5"><label class="text-xs font-medium text-[#8899aa] mb-2.5 block">Medical Conditions</label><div class="flex flex-wrap gap-2"><span class="pill" data-c="diabetes" onclick="toggleCond(this)"><i class="fas fa-syringe mr-1.5 text-[10px]"></i>Diabetes</span><span class="pill" data-c="paralysis" onclick="toggleCond(this)"><i class="fas fa-wheelchair mr-1.5 text-[10px]"></i>Paralysis</span><span class="pill" data-c="muscle_injury" onclick="toggleCond(this)"><i class="fas fa-band-aid mr-1.5 text-[10px]"></i>Muscle Injury</span><span class="pill" data-c="surgery" onclick="toggleCond(this)"><i class="fas fa-cut mr-1.5 text-[10px]"></i>Surgery History</span></div></div>
-          <div class="mb-6"><label class="text-xs font-medium text-[#8899aa] mb-2.5 block">Mobility Level</label><div class="flex gap-3"><div class="mob-card" data-m="fully" onclick="selectMob(this)"><i class="fas fa-walking text-lg text-brand-500 mb-2"></i><p class="text-xs font-semibold text-white">Fully Mobile</p><p class="text-[10px] text-[#6b7d95] mt-1">Independent</p></div><div class="mob-card" data-m="partially" onclick="selectMob(this)"><i class="fas fa-crutch text-lg text-yellow-400 mb-2"></i><p class="text-xs font-semibold text-white">Partially Mobile</p><p class="text-[10px] text-[#6b7d95] mt-1">Needs assistance</p></div><div class="mob-card" data-m="immobile" onclick="selectMob(this)"><i class="fas fa-bed text-lg text-red-400 mb-2"></i><p class="text-xs font-semibold text-white">Immobile</p><p class="text-[10px] text-[#6b7d95] mt-1">Bedridden</p></div></div></div>
-          <button type="submit" class="btn btn-p w-full"><i class="fas fa-plus mr-2"></i>Register Patient</button>
+          <div class="grid grid-cols-2 gap-5 mb-5"><div><label class="text-xs font-bold text-gray-600 mb-2 block uppercase tracking-wide">Bed Number</label><input type="text" id="f-bed" class="fi" placeholder="e.g. BED-05" required></div><div><label class="text-xs font-bold text-gray-600 mb-2 block uppercase tracking-wide">Full Name</label><input type="text" id="f-name" class="fi" placeholder="Patient name" required></div></div>
+          <div class="grid grid-cols-2 gap-5 mb-5"><div><label class="text-xs font-bold text-gray-600 mb-2 block uppercase tracking-wide">Age</label><input type="number" id="f-age" class="fi" placeholder="Years" min="1" max="120" required></div><div><label class="text-xs font-bold text-gray-600 mb-2 block uppercase tracking-wide">Gender</label><select id="f-gender" class="fi" required><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div></div>
+          <div class="grid grid-cols-2 gap-5 mb-5"><div><label class="text-xs font-bold text-gray-600 mb-2 block uppercase tracking-wide">Height (cm)</label><input type="number" id="f-ht" class="fi" placeholder="170" min="50" max="250" required></div><div><label class="text-xs font-bold text-gray-600 mb-2 block uppercase tracking-wide">Weight (kg)</label><input type="number" id="f-wt" class="fi" placeholder="70" min="10" max="300" required></div></div>
+          <div class="mb-6 p-4 rounded-lg bg-gray-50 border border-gray-200 flex items-center gap-3"><span class="text-xs font-bold text-gray-500 uppercase">Auto-calculated BMI:</span><span class="font-display font-bold text-xl text-gray-900" id="live-bmi">--</span><span class="text-xs font-bold text-gray-500" id="bmi-cat"></span></div>
+          <div class="mb-6"><label class="text-xs font-bold text-gray-600 mb-3 block uppercase tracking-wide">Medical Conditions</label><div class="flex flex-wrap gap-2"><span class="pill" data-c="diabetes" onclick="toggleCond(this)"><i class="fas fa-syringe mr-1.5 text-[10px]"></i>Diabetes</span><span class="pill" data-c="paralysis" onclick="toggleCond(this)"><i class="fas fa-wheelchair mr-1.5 text-[10px]"></i>Paralysis</span><span class="pill" data-c="muscle_injury" onclick="toggleCond(this)"><i class="fas fa-band-aid mr-1.5 text-[10px]"></i>Muscle Injury</span><span class="pill" data-c="surgery" onclick="toggleCond(this)"><i class="fas fa-cut mr-1.5 text-[10px]"></i>Surgery History</span></div></div>
+          <div class="mb-8"><label class="text-xs font-bold text-gray-600 mb-3 block uppercase tracking-wide">Mobility Level</label><div class="flex gap-4"><div class="mob-card" data-m="fully" onclick="selectMob(this)"><i class="fas fa-walking text-2xl text-brand-600 mb-3"></i><p class="text-sm font-bold text-gray-900">Fully Mobile</p><p class="text-[11px] font-medium text-gray-500 mt-1">Independent</p></div><div class="mob-card" data-m="partially" onclick="selectMob(this)"><i class="fas fa-crutch text-2xl text-yellow-500 mb-3"></i><p class="text-sm font-bold text-gray-900">Partially Mobile</p><p class="text-[11px] font-medium text-gray-500 mt-1">Needs assistance</p></div><div class="mob-card" data-m="immobile" onclick="selectMob(this)"><i class="fas fa-bed text-2xl text-red-500 mb-3"></i><p class="text-sm font-bold text-gray-900">Immobile</p><p class="text-[11px] font-medium text-gray-500 mt-1">Bedridden</p></div></div></div>
+          <button type="submit" class="btn btn-p w-full text-base py-3"><i class="fas fa-plus mr-2"></i>Register Patient</button>
         </form>
       </div>
     </div>
 
-    <!-- MONITORING -->
     <div class="view" id="view-monitoring">
-      <div class="flex items-center gap-3 mb-5">
+      <div class="flex items-center gap-3 mb-6">
         <button class="mtab active" id="tab-sim" onclick="switchMode('sim')"><i class="fas fa-film mr-2 text-xs"></i>Video Simulation</button>
         <button class="mtab" id="tab-cam" onclick="switchMode('cam')"><i class="fas fa-camera mr-2 text-xs"></i>Live Camera</button>
-        <div class="ml-auto text-[11px] text-[#4a5a70]"><i class="fas fa-info-circle mr-1"></i>Video simulation recommended for stable demos</div>
+        <div class="ml-auto text-[11px] font-bold text-gray-500 uppercase"><i class="fas fa-info-circle mr-1"></i>Simulation uses advanced temporal smoothing</div>
       </div>
 
-      <!-- SIM MODE -->
       <div id="sim-panel">
-        <!-- Step 1: Bed selection (always visible when not running) -->
-        <div id="sim-setup" class="mb-5">
+        <div id="sim-setup" class="mb-6">
           <div class="bed-sel-card">
-            <div class="flex items-center gap-2 mb-3">
-              <div class="w-7 h-7 rounded-lg bg-brand-500/10 flex items-center justify-center"><i class="fas fa-bed text-brand-500 text-xs"></i></div>
-              <h4 class="text-sm font-display font-semibold text-white">Step 1: Select Patient Bed</h4>
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center"><i class="fas fa-bed text-brand-600 text-sm"></i></div>
+              <h4 class="text-base font-display font-bold text-gray-900">Step 1: Select Patient Bed</h4>
             </div>
-            <div id="bed-chips" class="grid grid-cols-3 gap-2"></div>
-            <p class="text-[10px] text-[#4a5a70] mt-2" id="bed-hint">Click a bed to select, then choose a video source below</p>
+            <div id="bed-chips" class="grid grid-cols-3 gap-3"></div>
+            <p class="text-xs font-medium text-gray-500 mt-3" id="bed-hint">Click a bed to select, then choose a video source below</p>
           </div>
           <div class="bed-sel-card">
-            <div class="flex items-center gap-2 mb-3">
-              <div class="w-7 h-7 rounded-lg bg-brand-500/10 flex items-center justify-center"><i class="fas fa-video text-brand-500 text-xs"></i></div>
-              <h4 class="text-sm font-display font-semibold text-white">Step 2: Choose Video Source</h4>
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center"><i class="fas fa-video text-brand-600 text-sm"></i></div>
+              <h4 class="text-base font-display font-bold text-gray-900">Step 2: Choose Video Source</h4>
             </div>
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-2 gap-5">
               <div class="upload-zone" onclick="document.getElementById('vid-input').click()">
-                <i class="fas fa-cloud-upload-alt text-2xl text-[#2e3d5a] mb-3"></i>
-                <p class="text-sm text-[#8899aa] font-medium mb-1">Upload Patient Video</p>
-                <p class="text-[11px] text-[#4a5a70]">MP4, WebM — 30 seconds recommended</p>
+                <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-3"></i>
+                <p class="text-base text-gray-700 font-bold mb-1">Upload Patient Video</p>
+                <p class="text-xs font-medium text-gray-500">MP4, WebM — 30 seconds recommended</p>
                 <input type="file" id="vid-input" accept="video/*" class="hidden" onchange="handleUpload(event)">
               </div>
-              <div class="upload-zone" style="border-color:rgba(0,212,170,.25);background:rgba(0,212,170,.03)" onclick="startBuiltin()">
-                <i class="fas fa-play-circle text-2xl text-brand-500 mb-3"></i>
-                <p class="text-sm text-brand-400 font-medium mb-1">Built-in Demo Scene</p>
-                <p class="text-[11px] text-brand-600">Procedural hospital animation</p>
+              <div class="upload-zone" style="border-color:#00d4aa;background:#f0fdfa" onclick="startBuiltin()">
+                <i class="fas fa-play-circle text-3xl text-brand-500 mb-3"></i>
+                <p class="text-base text-brand-700 font-bold mb-1">Built-in Demo Scene</p>
+                <p class="text-xs font-medium text-brand-600">Procedural hospital animation</p>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Active simulation (hidden until started) -->
         <div id="sim-active" class="hidden">
-          <div class="grid grid-cols-5 gap-5">
+          <div class="grid grid-cols-5 gap-6">
             <div class="col-span-3">
               <div class="vbox" id="sim-vbox">
                 <canvas id="sim-dc"></canvas>
                 <video id="sim-vid" style="display:none" loop muted playsinline></video>
-                <div class="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded bg-black/60" id="rec-badge"><span class="w-2 h-2 rounded-full bg-red-500" style="animation:recBlink 1s infinite"></span><span class="text-[10px] text-white font-mono font-bold">REC</span></div>
-                <div class="absolute bottom-3 left-3 px-2.5 py-1 rounded bg-black/60"><span class="text-[10px] text-white/70 font-mono" id="sim-src-lbl">BUILT-IN DEMO</span></div>
+                <div class="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/70 backdrop-blur-sm" id="rec-badge"><span class="w-2.5 h-2.5 rounded-full bg-red-500" style="animation:recBlink 1s infinite"></span><span class="text-[10px] text-white font-mono font-bold tracking-widest">REC</span></div>
+                <div class="absolute bottom-3 left-3 px-2.5 py-1.5 rounded-lg bg-black/70 backdrop-blur-sm"><span class="text-[10px] text-white/90 font-mono font-bold" id="sim-src-lbl">BUILT-IN DEMO</span></div>
               </div>
-              <div class="mt-3 flex items-center gap-3 flex-wrap">
-                <div class="px-3 py-1.5 rounded-lg bg-sf-700 border border-[#1a2540]"><span class="text-[11px] text-[#6b7d95]">Monitoring:</span> <strong class="text-xs text-white" id="sim-bed-lbl">--</strong></div>
-                <button onclick="stopSim()" class="btn btn-s btn-sm"><i class="fas fa-stop mr-1.5"></i>Stop</button>
-                <div class="flex items-center gap-2 ml-auto"><span class="text-[11px] text-[#6b7d95]">Time Scale</span><input type="range" id="tm-slider" class="slider" style="width:100px" min="1" max="20" value="10" oninput="setTimeMult(this.value)"><span class="text-xs text-brand-400 font-bold w-10" id="tm-lbl">10x</span></div>
+              <div class="mt-4 flex items-center gap-3 flex-wrap">
+                <div class="px-4 py-2 rounded-lg bg-white border border-gray-200"><span class="text-xs font-bold text-gray-500 uppercase mr-1">Monitoring:</span> <strong class="text-sm text-gray-900" id="sim-bed-lbl">--</strong></div>
+                <button onclick="stopSim()" class="btn btn-s"><i class="fas fa-stop mr-1.5"></i>Stop</button>
+                <div class="flex items-center gap-3 ml-auto bg-white px-4 py-2 rounded-lg border border-gray-200"><span class="text-xs font-bold text-gray-500 uppercase">Time Scale</span><input type="range" id="tm-slider" class="slider" style="width:120px" min="1" max="20" value="10" oninput="setTimeMult(this.value)"><span class="text-sm text-brand-600 font-bold w-10 text-right" id="tm-lbl">10x</span></div>
               </div>
-              <div id="sc-ctrls" class="mt-3 flex items-center gap-2 flex-wrap"><span class="text-[10px] text-[#4a5a70] uppercase tracking-wider font-semibold mr-1">Scenarios:</span><button class="sc-btn active" id="sc-auto" onclick="setScenario('auto')">Auto Demo</button><button class="sc-btn" id="sc-still" onclick="setScenario('still')">Force Still</button><button class="sc-btn" id="sc-fidget" onclick="setScenario('fidget')">Force Fidget</button><button class="sc-btn" id="sc-turn" onclick="setScenario('turn')">Force Turn</button></div>
+              <div id="sc-ctrls" class="mt-4 flex items-center gap-2 flex-wrap bg-white p-2.5 rounded-lg border border-gray-200"><span class="text-[11px] text-gray-500 uppercase tracking-widest font-bold ml-1 mr-2">Scenarios:</span><button class="sc-btn active" id="sc-auto" onclick="setScenario('auto')">Auto Demo</button><button class="sc-btn" id="sc-still" onclick="setScenario('still')">Force Still</button><button class="sc-btn" id="sc-fidget" onclick="setScenario('fidget')">Force Fidget</button><button class="sc-btn" id="sc-turn" onclick="setScenario('turn')">Force Turn</button></div>
             </div>
             <div class="col-span-2 space-y-4">
-              <div class="stat-card"><h4 class="text-xs font-semibold text-[#8899aa] mb-3 uppercase tracking-wider">Movement Detection</h4><div class="flex items-end justify-between mb-3"><div><p class="font-display font-bold text-3xl text-white" id="sim-ms">0</p><p class="text-[11px] text-[#6b7d95]">Motion Score</p></div><div id="sim-mb"><span class="dot off"></span><span class="text-xs text-red-400 font-medium">No Motion</span></div></div><div class="mbar"><div class="mbar-fill" id="sim-mbar" style="width:0%"></div></div><p class="text-[10px] text-[#4a5a70] mt-2">Threshold: 15 | D = Σ√((x₂-x₁)²+(y₂-y₁)²)</p></div>
-              <div class="stat-card"><h4 class="text-xs font-semibold text-[#8899aa] mb-3 uppercase tracking-wider">Simulated Immobility</h4><p class="font-display font-bold text-2xl text-white" id="sim-it">00:00:00</p><div class="flex items-center gap-3 mt-2"><span class="text-[11px] text-[#6b7d95]">Simulated: <strong class="text-white" id="sim-im">0.0</strong> min</span><span class="text-[11px] text-[#4a5a70]">|</span><span class="text-[11px] text-[#6b7d95]">Video: <strong class="text-white" id="sim-vt">0.0</strong>s</span></div></div>
-              <div class="stat-card"><h4 class="text-xs font-semibold text-[#8899aa] mb-3 uppercase tracking-wider">Posture Detection</h4><div class="flex items-center justify-between"><span class="ptag" id="sim-pt"><i class="fas fa-person text-[10px]"></i> Supine</span><span class="text-[11px] text-[#6b7d95]" id="sim-pd">Lying flat on back</span></div></div>
-              <div class="stat-card"><h4 class="text-xs font-semibold text-[#8899aa] mb-3 uppercase tracking-wider">Pressure Zones</h4><div class="flex justify-center" id="pm-map"></div></div>
-              <div class="stat-card"><h4 class="text-xs font-semibold text-[#8899aa] mb-3 uppercase tracking-wider">Simulation Info</h4><div class="space-y-2 text-xs"><div class="flex justify-between"><span class="text-[#6b7d95]">Mode</span><span class="text-white" id="si-mode">--</span></div><div class="flex justify-between"><span class="text-[#6b7d95]">Time Multiplier</span><span class="text-white" id="si-mult">10x</span></div><div class="flex justify-between"><span class="text-[#6b7d95]">FPS</span><span class="text-white" id="si-fps">--</span></div><div class="flex justify-between"><span class="text-[#6b7d95]">Alert Threshold</span><span class="text-white" id="si-th">--</span></div></div></div>
+              <div class="stat-card"><h4 class="text-xs font-bold text-gray-500 mb-3 uppercase tracking-widest">Movement Detection</h4><div class="flex items-end justify-between mb-3"><div><p class="font-display font-bold text-4xl text-gray-900" id="sim-ms">0</p><p class="text-xs font-medium text-gray-500">Motion Score (Avg)</p></div><div id="sim-mb" class="bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100"><span class="dot off"></span><span class="text-xs text-red-600 font-bold ml-1.5">No Motion</span></div></div><div class="mbar"><div class="mbar-fill" id="sim-mbar" style="width:0%"></div></div><p class="text-[10px] font-bold text-gray-400 mt-2 uppercase tracking-wide">Threshold: 5 | Temp. Smoothed</p></div>
+              <div class="stat-card"><h4 class="text-xs font-bold text-gray-500 mb-3 uppercase tracking-widest">Simulated Immobility</h4><p class="font-display font-bold text-3xl text-gray-900" id="sim-it">00:00:00</p><div class="flex items-center gap-3 mt-2"><span class="text-xs font-medium text-gray-500">Simulated: <strong class="text-gray-900" id="sim-im">0.0</strong> min</span><span class="text-xs text-gray-300">|</span><span class="text-xs font-medium text-gray-500">Video: <strong class="text-gray-900" id="sim-vt">0.0</strong>s</span></div></div>
+              <div class="stat-card"><h4 class="text-xs font-bold text-gray-500 mb-3 uppercase tracking-widest">Posture Detection</h4><div class="flex items-center justify-between"><span class="ptag" id="sim-pt"><i class="fas fa-person text-[10px]"></i> Supine</span><span class="text-xs font-medium text-gray-600" id="sim-pd">Lying flat on back</span></div></div>
+              <div class="stat-card"><h4 class="text-xs font-bold text-gray-500 mb-3 uppercase tracking-widest">Pressure Zones</h4><div class="flex justify-center bg-gray-50 rounded-xl py-2 border border-gray-100" id="pm-map"></div></div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- CAM MODE -->
       <div id="cam-panel" class="hidden">
         <div class="bed-sel-card mb-5">
-          <div class="flex items-center gap-2 mb-3"><div class="w-7 h-7 rounded-lg bg-brand-500/10 flex items-center justify-center"><i class="fas fa-bed text-brand-500 text-xs"></i></div><h4 class="text-sm font-display font-semibold text-white">Select Patient Bed</h4></div>
-          <select id="cam-bed" class="fi text-sm"><option value="">Select bed...</option></select>
+          <div class="flex items-center gap-2 mb-3"><div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center"><i class="fas fa-bed text-brand-600 text-sm"></i></div><h4 class="text-base font-display font-bold text-gray-900">Select Patient Bed</h4></div>
+          <select id="cam-bed" class="fi text-base"><option value="">Select bed...</option></select>
         </div>
         <div class="grid grid-cols-5 gap-6">
           <div class="col-span-3">
-            <div class="vbox" id="cam-vbox"><video id="cam-vid" autoplay playsinline muted></video><canvas id="cam-ov"></canvas><div id="cam-ph" class="absolute inset-0 flex flex-col items-center justify-center bg-sf-800 z-10"><i class="fas fa-video-slash text-3xl text-[#243050] mb-3"></i><p class="text-sm text-[#4a5a70]">Camera not active</p></div></div>
-            <div class="mt-3 flex items-center gap-3"><button id="cam-btn" onclick="toggleCam()" class="btn btn-p btn-sm"><i class="fas fa-play mr-1.5"></i>Start Camera</button></div>
+            <div class="vbox" id="cam-vbox"><video id="cam-vid" autoplay playsinline muted></video><canvas id="cam-ov"></canvas><div id="cam-ph" class="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 z-10"><i class="fas fa-video-slash text-4xl text-gray-700 mb-4"></i><p class="text-base font-medium text-gray-400">Camera not active</p></div></div>
+            <div class="mt-4 flex items-center gap-3"><button id="cam-btn" onclick="toggleCam()" class="btn btn-p"><i class="fas fa-play mr-2"></i>Start Camera</button></div>
           </div>
           <div class="col-span-2 space-y-4">
-            <div class="stat-card"><h4 class="text-xs font-semibold text-[#8899aa] mb-3 uppercase tracking-wider">Movement Analysis</h4><div class="flex items-end justify-between mb-3"><div><p class="font-display font-bold text-3xl text-white" id="cam-ms">0</p><p class="text-[11px] text-[#6b7d95]">Motion Score</p></div><div id="cam-mb"><span class="dot off"></span><span class="text-xs text-red-400 font-medium">No Motion</span></div></div><div class="mbar"><div class="mbar-fill" id="cam-mbar" style="width:0%"></div></div></div>
-            <div class="stat-card"><h4 class="text-xs font-semibold text-[#8899aa] mb-3 uppercase tracking-wider">Immobility Timer</h4><p class="font-display font-bold text-2xl text-white" id="cam-it">00:00:00</p></div>
-            <div class="stat-card"><h4 class="text-xs font-semibold text-[#8899aa] mb-3 uppercase tracking-wider">Detection Info</h4><div class="space-y-2 text-xs"><div class="flex justify-between"><span class="text-[#6b7d95]">Method</span><span class="text-white">Frame Differencing</span></div><div class="flex justify-between"><span class="text-[#6b7d95]">Resolution</span><span class="text-white" id="cam-res">--</span></div><div class="flex justify-between"><span class="text-[#6b7d95]">FPS</span><span class="text-white" id="cam-fps">--</span></div></div></div>
-            <div class="p-3 rounded-lg bg-brand-500/5 border border-brand-500/15"><p class="text-[11px] text-brand-400"><i class="fas fa-info-circle mr-1.5"></i>Production uses MediaPipe Pose (33 keypoints). Demo uses frame differencing.</p></div>
+            <div class="stat-card"><h4 class="text-xs font-bold text-gray-500 mb-3 uppercase tracking-widest">Movement Analysis</h4><div class="flex items-end justify-between mb-3"><div><p class="font-display font-bold text-4xl text-gray-900" id="cam-ms">0</p><p class="text-xs font-medium text-gray-500">Motion Score (Avg)</p></div><div id="cam-mb" class="bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100"><span class="dot off"></span><span class="text-xs text-red-600 font-bold ml-1.5">No Motion</span></div></div><div class="mbar"><div class="mbar-fill" id="cam-mbar" style="width:0%"></div></div></div>
+            <div class="stat-card"><h4 class="text-xs font-bold text-gray-500 mb-3 uppercase tracking-widest">Immobility Timer</h4><p class="font-display font-bold text-3xl text-gray-900" id="cam-it">00:00:00</p></div>
+            <div class="p-4 rounded-xl bg-brand-50 border border-brand-200"><p class="text-xs font-medium text-brand-800"><i class="fas fa-info-circle mr-1.5"></i>Production uses MediaPipe Pose (33 keypoints). Demo uses robust temporal-smoothed frame differencing.</p></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ALERTS -->
     <div class="view" id="view-alerts">
-      <div class="flex items-center justify-between mb-5"><div><h3 class="font-display font-bold text-xl text-white">Alert Center</h3><p class="text-sm text-[#6b7d95]">Real-time bedsore risk notifications</p></div><button onclick="clearAlerts()" class="btn btn-s text-xs"><i class="fas fa-check-double mr-1.5"></i>Clear All</button></div>
-      <div id="a-list" class="space-y-3"></div>
-      <div id="a-empty" class="hidden text-center py-16"><i class="fas fa-check-circle text-3xl text-brand-500/30 mb-3"></i><p class="text-sm text-[#4a5a70]">All clear — no active alerts</p></div>
+      <div class="flex items-center justify-between mb-6 bg-white p-6 rounded-xl border border-gray-200 shadow-sm"><div><h3 class="font-display font-bold text-2xl text-gray-900">Alert Center</h3><p class="text-sm font-medium text-gray-500 mt-1">Real-time non-linear bedsore risk notifications</p></div><button onclick="clearAlerts()" class="btn btn-s text-sm"><i class="fas fa-check-double mr-2"></i>Clear All</button></div>
+      <div id="a-list" class="space-y-4"></div>
+      <div id="a-empty" class="hidden text-center py-20 bg-white rounded-xl border border-gray-200"><i class="fas fa-check-circle text-5xl text-brand-200 mb-4"></i><p class="text-base font-bold text-gray-500">All clear — no active alerts</p></div>
     </div>
 
   </div>
@@ -304,15 +294,15 @@ select.fi option{background:#0d1320;color:#e8edf4}
 
 <script>
 /* ========== CONFIG ========== */
-const CFG = { BASE_TH: 120, MOVE_TH: 15, HIST_MAX: 60, HIST_INT: 10000 };
+const CFG = { BASE_TH: 120, MOVE_TH: 5, HIST_MAX: 60, HIST_INT: 10000 };
 
 /* ========== STATE ========== */
 const S = {
   patients: {}, alerts: [], view: 'dashboard', sound: true,
   form: { conds: [], mob: '' }, alerted: new Set(),
-  selBed: null, // selected bed for sim
-  sim: { on: false, src: 'none', bed: null, prev: null, score: 0, mult: 10, immobMs: 0, vidTime: 0, posture: 'supine', scenario: 'auto', fps: 0, _fc: 0, _ft: 0, _lt: 0, _pc: null, _px: null, _gc: 0 },
-  cam: { on: false, stream: null, bed: null, prev: null, score: 0, fps: 0, _fc: 0, _ft: 0, _hc: null, _hx: null },
+  selBed: null, 
+  sim: { on: false, src: 'none', bed: null, prev: null, score: 0, mult: 10, immobMs: 0, vidTime: 0, posture: 'supine', scenario: 'auto', moveHist: [], fps: 0, _fc: 0, _ft: 0, _lt: 0, _pc: null, _px: null, _gc: 0 },
+  cam: { on: false, stream: null, bed: null, prev: null, score: 0, moveHist: [], fps: 0, _fc: 0, _ft: 0, _hc: null, _hx: null },
   demo: { on: false, t: 0, st: 0, bp: 0, ox: 0, oy: 0, rot: 0, tx: 0, ty: 0, tr: 0, gc: 0, c: null, x: null }
 };
 
@@ -323,11 +313,29 @@ function bmiLabel(b) { return b < 18.5 ? 'Underweight' : b < 25 ? 'Normal' : b <
 function fmtMs(ms) { const s = Math.floor(Math.max(0, ms) / 1000); return `${String(Math.floor(s/3600)).padStart(2,'0')}:${String(Math.floor(s%3600/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`; }
 function fmtMin(ms) { return (Math.max(0, ms) / 60000).toFixed(1); }
 
-/* ========== RISK ENGINE ========== */
+/* ========== NEW QUADRATIC RISK ENGINE ========== */
 function ageW(a) { return a < 40 ? 5 : a <= 60 ? 10 : 20; }
 function condW(c) { let w = 0; const m = { diabetes: 20, paralysis: 30, muscle_injury: 15, surgery: 10 }; c.forEach(x => { if (m[x]) w += m[x]; }); return w; }
 function mobW(m) { return m === 'fully' ? 5 : m === 'partially' ? 15 : 25; }
-function calcRisk(p) { const im = (Date.now() - p.lastMovement) / 60000; return { score: Math.round(im * 0.5 + ageW(p.age) + condW(p.conditions) + mobW(p.mobility)), immMin: im, aw: ageW(p.age), cw: condW(p.conditions), mw: mobW(p.mobility) }; }
+
+function calcRisk(p) { 
+  const im = (Date.now() - p.lastMovement) / 60000; 
+  let timeRisk = 0;
+  // Non-linear acceleration threshold
+  if (im < 30) {
+      timeRisk = im * 0.5;
+  } else {
+      timeRisk = (30 * 0.5) + Math.pow(im - 30, 2) * 0.02;
+  }
+  
+  const aw = ageW(p.age);
+  const cw = condW(p.conditions);
+  const mw = mobW(p.mobility);
+  const score = Math.min(100, Math.round(timeRisk + aw + cw + mw));
+  
+  return { score: score, immMin: im, aw: aw, cw: cw, mw: mw }; 
+}
+
 function riskLv(s) { return s <= 30 ? 'low' : s <= 60 ? 'medium' : 'high'; }
 function thMin(p) { return CFG.BASE_TH - (condW(p.conditions) / 2); }
 
@@ -414,18 +422,18 @@ function playBeep(type) {
     else { o.frequency.value = 520; g.gain.value = 0.1; o.start(c.currentTime); g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.3); o.stop(c.currentTime + 0.3); }
   } catch (e) {}
 }
-function toggleSound() { S.sound = !S.sound; $('sound-btn').innerHTML = S.sound ? '<i class="fas fa-volume-up text-xs"></i>' : '<i class="fas fa-volume-mute text-xs"></i>'; }
+function toggleSound() { S.sound = !S.sound; $('sound-btn').innerHTML = S.sound ? '<i class="fas fa-volume-up text-sm"></i>' : '<i class="fas fa-volume-mute text-sm"></i>'; }
 
 /* ========== TOAST ========== */
 function toast(type, title, msg) {
   const icons = { critical: 'fa-exclamation-triangle', warning: 'fa-exclamation-circle', info: 'fa-info-circle' };
   const t = document.createElement('div'); t.className = 'toast toast-' + type;
-  t.innerHTML = '<i class="fas ' + icons[type] + ' mt-0.5"></i><div class="flex-1"><p class="text-xs font-semibold mb-0.5">' + title + '</p><p class="text-[11px] opacity-80">' + msg + '</p></div><button onclick="this.parentElement.classList.add(\'out\');setTimeout(()=>this.parentElement.remove(),300)" class="opacity-50 hover:opacity-100 cursor-pointer bg-transparent border-none text-inherit"><i class="fas fa-times text-xs"></i></button>';
+  t.innerHTML = '<i class="fas ' + icons[type] + ' mt-0.5 text-lg"></i><div class="flex-1"><p class="text-sm font-bold mb-0.5">' + title + '</p><p class="text-[12px] font-medium opacity-80">' + msg + '</p></div><button onclick="this.parentElement.classList.add(\'out\');setTimeout(()=>this.parentElement.remove(),300)" class="opacity-50 hover:opacity-100 cursor-pointer bg-transparent border-none text-inherit"><i class="fas fa-times text-sm"></i></button>';
   $('toast-box').appendChild(t);
   setTimeout(() => { if (t.parentElement) { t.classList.add('out'); setTimeout(() => t.remove(), 300); } }, 5000);
 }
 
-/* ========== DEMO GENERATOR ========== */
+/* ========== DEMO GENERATOR (Stays dark for screen simulation) ========== */
 function initDemo() { const c = document.createElement('canvas'); c.width = 640; c.height = 480; S.demo.c = c; S.demo.x = c.getContext('2d'); }
 function rR(ctx, x, y, w, h, r) { r = Math.min(r, w/2, h/2); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r); ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h); ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r); ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y); ctx.closePath(); }
 
@@ -512,12 +520,12 @@ function drawDemo() {
 function startBuiltin() {
   if (!S.selBed || !S.patients[S.selBed]) { toast('warning', 'Select Bed', 'Choose a patient bed in Step 1 first'); return; }
   const p = S.patients[S.selBed];
-  S.sim.src='builtin'; S.sim.bed=S.selBed; S.sim.on=true; S.sim.immobMs=p._si||0; S.sim.prev=null; S.sim.score=0; S.sim.vidTime=0; S.sim._lt=performance.now(); S.sim._ft=performance.now(); S.sim._fc=0; S.sim._gc=0;
+  S.sim.src='builtin'; S.sim.bed=S.selBed; S.sim.on=true; S.sim.immobMs=p._si||0; S.sim.prev=null; S.sim.score=0; S.sim.vidTime=0; S.sim.moveHist=[]; S.sim._lt=performance.now(); S.sim._ft=performance.now(); S.sim._fc=0; S.sim._gc=0;
   S.demo.on=true; S.demo.t=0; S.demo.st=0; S.demo.ox=0; S.demo.oy=0; S.demo.rot=0; S.demo.tx=0; S.demo.ty=0; S.demo.tr=0; S.demo.gc=0;
   const dc=$('sim-dc'); dc.width=640; dc.height=480; ensurePC(640,480);
   $('sim-setup').classList.add('hidden'); $('sim-active').classList.remove('hidden');
   $('sim-src-lbl').textContent='BUILT-IN DEMO'; $('sim-bed-lbl').textContent=p.bed+' — '+p.name;
-  $('sc-ctrls').style.display='flex'; updateSimInfo(); setScenario('auto'); simLoop();
+  updateSimInfo(); setScenario('auto'); simLoop();
   toast('info','Demo Started','Monitoring '+p.name);
 }
 
@@ -528,11 +536,11 @@ function handleUpload(e) {
   vid.src=url; vid.style.display='none';
   vid.onloadeddata = () => {
     const vw=vid.videoWidth||640, vh=vid.videoHeight||480;
-    S.sim.src='video'; S.sim.bed=S.selBed; S.sim.on=true; S.sim.immobMs=p._si||0; S.sim.prev=null; S.sim.score=0; S.sim.vidTime=0; S.sim._lt=performance.now(); S.sim._ft=performance.now(); S.sim._fc=0;
+    S.sim.src='video'; S.sim.bed=S.selBed; S.sim.on=true; S.sim.immobMs=p._si||0; S.sim.prev=null; S.sim.score=0; S.sim.vidTime=0; S.sim.moveHist=[]; S.sim._lt=performance.now(); S.sim._ft=performance.now(); S.sim._fc=0;
     const dc=$('sim-dc'); dc.width=vw; dc.height=vh; ensurePC(vw,vh); vid.play();
     $('sim-setup').classList.add('hidden'); $('sim-active').classList.remove('hidden');
     $('sim-src-lbl').textContent=file.name.toUpperCase(); $('sim-bed-lbl').textContent=p.bed+' — '+p.name;
-    $('sc-ctrls').style.display='none'; updateSimInfo(); simLoop();
+    updateSimInfo(); simLoop();
     toast('info','Video Loaded','Processing '+file.name);
   };
   vid.onerror = () => { toast('warning','Video Error','Could not load this file'); };
@@ -545,28 +553,51 @@ function stopSim() {
   const vid=$('sim-vid'); vid.pause(); vid.removeAttribute('src'); vid.load();
   const dc=$('sim-dc'); dc.getContext('2d').clearRect(0,0,dc.width,dc.height);
   $('sim-setup').classList.remove('hidden'); $('sim-active').classList.add('hidden');
-  $('sim-ms').textContent='0'; $('sim-mbar').style.width='0%'; $('sim-it').textContent='00:00:00'; $('si-fps').textContent='--';
+  $('sim-ms').textContent='0'; $('sim-mbar').style.width='0%'; $('sim-it').textContent='00:00:00';
   renderDash();
 }
 
 function ensurePC(w,h) { if(!S.sim._pc){S.sim._pc=document.createElement('canvas');S.sim._px=S.sim._pc.getContext('2d',{willReadFrequently:true});} S.sim._pc.width=w; S.sim._pc.height=h; }
 
+/* ========== NEW MOTION ENGINE (ACCUMULATION & NORMALIZATION) ========== */
 function simLoop() {
   if (!S.sim.on) return;
   const dc=$('sim-dc'), dctx=dc.getContext('2d'), pc=S.sim._pc, pctx=S.sim._px, w=dc.width, h=dc.height;
   if (S.sim.src==='builtin') { const dt=Math.min((performance.now()-S.sim._lt)/1000,0.05); S.sim.vidTime+=dt; updateDemo(dt); drawDemo(); pctx.drawImage(S.demo.c,0,0,w,h); }
   else { const vid=$('sim-vid'); if(vid.readyState<2){requestAnimationFrame(simLoop);return;} if(vid.ended||vid.paused){vid.currentTime=0;vid.play();} S.sim.vidTime=vid.currentTime; pctx.drawImage(vid,0,0,w,h); }
   const cur=pctx.getImageData(0,0,w,h);
+  
   if (S.sim.prev) {
     let td=0, dx=0, dy=0, dn=0; const cd=cur.data, pd=S.sim.prev.data, ov=dctx.createImageData(w,h), od=ov.data;
-    for(let i=0;i<cd.length;i+=16){const d=Math.abs(cd[i]-pd[i])+Math.abs(cd[i+1]-pd[i+1])+Math.abs(cd[i+2]-pd[i+2]);if(d>60){td+=d;od[i]=0;od[i+1]=212;od[i+2]=170;od[i+3]=Math.min(d,140);dx+=(i/4)%w;dy+=Math.floor((i/4)/w);dn++;}}
-    const nm=Math.min((td/((w*h/4)*300))*100,100); S.sim.score=nm; const mv=nm>CFG.MOVE_TH;
+    for(let i=0;i<cd.length;i+=16){
+      const d=Math.abs(cd[i]-pd[i])+Math.abs(cd[i+1]-pd[i+1])+Math.abs(cd[i+2]-pd[i+2]);
+      if(d>30){ // Lower pixel diff threshold
+        td+=d; od[i]=0; od[i+1]=212; od[i+2]=170; od[i+3]=Math.min(d,140); 
+        dx+=(i/4)%w; dy+=Math.floor((i/4)/w); dn++;
+      }
+    }
+    
+    // Normalize and Accumulate
+    const rawNorm = td / (w * h); 
+    if (!S.sim.moveHist) S.sim.moveHist = [];
+    S.sim.moveHist.push(rawNorm);
+    if (S.sim.moveHist.length > 10) S.sim.moveHist.shift();
+    const avgMove = S.sim.moveHist.reduce((a,b)=>a+b,0) / S.sim.moveHist.length;
+    
+    const nm = Math.min(avgMove * 100, 100); 
+    S.sim.score = nm; 
+    const mv = nm > CFG.MOVE_TH; // Adjusted global threshold
+    
     if(S.sim.src==='builtin') dctx.drawImage(S.demo.c,0,0,w,h); else dctx.drawImage($('sim-vid'),0,0,w,h);
     dctx.putImageData(ov,0,0);
-    dctx.strokeStyle=mv?'rgba(0,212,170,0.4)':'rgba(255,71,87,0.25)'; dctx.lineWidth=mv?3:2; dctx.strokeRect(1.5,1.5,w-3,h-3);
+    dctx.strokeStyle=mv?'rgba(0,212,170,0.6)':'rgba(255,71,87,0.4)'; dctx.lineWidth=mv?4:2; dctx.strokeRect(2,2,w-4,h-4);
+    
     if(dn>50){const ccx=dx/dn,ccy=dy/dn; if(ccy<h*0.35)S.sim.posture='sitting';else if(ccx<w*0.4)S.sim.posture='left_lateral';else if(ccx>w*0.6)S.sim.posture='right_lateral';else S.sim.posture='supine';}
+    
     $('sim-ms').textContent=Math.round(nm); $('sim-mbar').style.width=nm+'%'; $('sim-mbar').style.background=mv?'#00d4aa':'#ff4757';
-    $('sim-mb').innerHTML=mv?'<span class="dot on"></span><span class="text-xs text-brand-400 font-medium">Motion Detected</span>':'<span class="dot off"></span><span class="text-xs text-red-400 font-medium">No Motion</span>';
+    $('sim-mb').innerHTML=mv?'<span class="dot on"></span><span class="text-xs text-brand-600 font-bold ml-1.5">Motion Detected</span>':'<span class="dot off"></span><span class="text-xs text-red-600 font-bold ml-1.5">No Motion</span>';
+    $('sim-mb').className = mv ? 'bg-brand-50 px-3 py-1.5 rounded-lg border border-brand-100' : 'bg-red-50 px-3 py-1.5 rounded-lg border border-red-100';
+
     const now=performance.now(), delta=now-S.sim._lt, p=S.sim.bed?S.patients[S.sim.bed]:null;
     if(mv&&p){S.sim.immobMs=0;p.lastMovement=Date.now();}else if(p){S.sim.immobMs+=delta*S.sim.mult;p.lastMovement=Date.now()-S.sim.immobMs;}
     if(p){
@@ -581,7 +612,6 @@ function simLoop() {
   } else { if(S.sim.src==='builtin')dctx.drawImage(S.demo.c,0,0,w,h);else dctx.drawImage($('sim-vid'),0,0,w,h); }
   S.sim.prev=cur;
   $('sim-it').textContent=fmtMs(S.sim.immobMs); $('sim-im').textContent=fmtMin(S.sim.immobMs); $('sim-vt').textContent=S.sim.vidTime.toFixed(1);
-  S.sim._fc++; const now2=performance.now(); if(now2-S.sim._ft>=1000){S.sim.fps=S.sim._fc;S.sim._fc=0;S.sim._ft=now2;$('si-fps').textContent=S.sim.fps;}
   S.sim._lt=performance.now();
   requestAnimationFrame(simLoop);
 }
@@ -595,32 +625,32 @@ function updatePressureUI(){
   const rgb=lv==='high'?'255,71,87':lv==='medium'?'255,165,2':'0,212,170',dot=lv==='high'?'#ff4757':lv==='medium'?'#ffa502':'#00d4aa',ht=lv==='high'?'pz-hot':'';
   const zones=PZ_[S.sim.posture]||PZ_.supine;
   let svg='<svg viewBox="0 0 100 240" width="90" height="216">';
-  svg+='<circle cx="50" cy="18" r="14" fill="#131c2d" stroke="#1e2a3a" stroke-width="1.2"/><rect x="44" y="30" width="12" height="7" rx="2" fill="#131c2d"/><rect x="25" y="37" width="50" height="75" rx="8" fill="#131c2d" stroke="#1e2a3a" stroke-width="1.2"/><rect x="10" y="40" width="15" height="55" rx="7" fill="#131c2d" stroke="#1e2a3a" stroke-width="1"/><rect x="75" y="40" width="15" height="55" rx="7" fill="#131c2d" stroke="#1e2a3a" stroke-width="1"/><rect x="30" y="112" width="40" height="28" rx="6" fill="#131c2d" stroke="#1e2a3a" stroke-width="1.2"/><rect x="30" y="140" width="16" height="68" rx="7" fill="#131c2d" stroke="#1e2a3a" stroke-width="1"/><rect x="54" y="140" width="16" height="68" rx="7" fill="#131c2d" stroke="#1e2a3a" stroke-width="1"/><ellipse cx="38" cy="212" rx="9" ry="6" fill="#131c2d" stroke="#1e2a3a" stroke-width="1"/><ellipse cx="62" cy="212" rx="9" ry="6" fill="#131c2d" stroke="#1e2a3a" stroke-width="1"/>';
+  svg+='<circle cx="50" cy="18" r="14" fill="#e5e7eb" stroke="#d1d5db" stroke-width="1.2"/><rect x="44" y="30" width="12" height="7" rx="2" fill="#e5e7eb"/><rect x="25" y="37" width="50" height="75" rx="8" fill="#e5e7eb" stroke="#d1d5db" stroke-width="1.2"/><rect x="10" y="40" width="15" height="55" rx="7" fill="#e5e7eb" stroke="#d1d5db" stroke-width="1"/><rect x="75" y="40" width="15" height="55" rx="7" fill="#e5e7eb" stroke="#d1d5db" stroke-width="1"/><rect x="30" y="112" width="40" height="28" rx="6" fill="#e5e7eb" stroke="#d1d5db" stroke-width="1.2"/><rect x="30" y="140" width="16" height="68" rx="7" fill="#e5e7eb" stroke="#d1d5db" stroke-width="1"/><rect x="54" y="140" width="16" height="68" rx="7" fill="#e5e7eb" stroke="#d1d5db" stroke-width="1"/><ellipse cx="38" cy="212" rx="9" ry="6" fill="#e5e7eb" stroke="#d1d5db" stroke-width="1"/><ellipse cx="62" cy="212" rx="9" ry="6" fill="#e5e7eb" stroke="#d1d5db" stroke-width="1"/>';
   zones.forEach(z=>{const gr=z.r*(0.8+int_*0.5);svg+='<circle cx="'+z.x+'" cy="'+z.y+'" r="'+gr+'" fill="rgba('+rgb+','+(int_*0.5)+')" class="'+ht+'"/>';svg+='<circle cx="'+z.x+'" cy="'+z.y+'" r="2.5" fill="'+dot+'" opacity="0.9"/>';});
   svg+='</svg>';$('pm-map').innerHTML=svg;
 }
-function setTimeMult(v){S.sim.mult=parseInt(v);$('tm-lbl').textContent=v+'x';$('si-mult').textContent=v+'x';}
+function setTimeMult(v){S.sim.mult=parseInt(v);$('tm-lbl').textContent=v+'x';}
 function setScenario(sc){S.sim.scenario=sc;S.demo.st=0;document.querySelectorAll('.sc-btn').forEach(b=>b.classList.remove('active','danger'));const el=$('sc-'+sc);if(el)el.classList.add(sc==='still'?'danger':'active');}
-function updateSimInfo(){$('si-mode').textContent=S.sim.src==='builtin'?'Built-in Demo':'Video File';$('si-mult').textContent=S.sim.mult+'x';const p=S.sim.bed?S.patients[S.sim.bed]:null;$('si-th').textContent=p?thMin(p).toFixed(0)+' min':'--';}
+function updateSimInfo(){ /* Removed textual info box in light mode for cleaner look */ }
 
 /* ========== BED CHIP SELECTION ========== */
 function renderBedChips() {
   const ps = Object.values(S.patients);
   const box = $('bed-chips');
   if (!ps.length) {
-    box.innerHTML = '<p class="text-xs text-[#4a5a70] col-span-3 py-4 text-center">No patients registered. <button onclick="goTo(\'add-patient\')" class="text-brand-500 underline cursor-pointer bg-transparent border-none text-xs">Add one first</button></p>';
+    box.innerHTML = '<p class="text-xs font-bold text-gray-400 col-span-3 py-6 text-center bg-gray-50 rounded-lg border border-gray-100">No patients registered. <button onclick="goTo(\'add-patient\')" class="text-brand-600 underline cursor-pointer bg-transparent border-none text-xs ml-1">Add one first</button></p>';
     $('bed-hint').textContent = '';
     return;
   }
   box.innerHTML = ps.map(p => {
     const r = calcRisk(p), lv = riskLv(r.score);
-    const bc = lv === 'high' ? 'border-red-500/40 bg-red-500/5' : lv === 'medium' ? 'border-yellow-500/30 bg-yellow-500/5' : 'border-[#1a2540]';
+    const bc = lv === 'high' ? 'border-red-200 bg-red-50' : lv === 'medium' ? 'border-yellow-200 bg-yellow-50' : 'border-gray-200';
     const sc = S.selBed === p.bed ? 'sel' : '';
     const dc = lv === 'high' ? '#ff4757' : lv === 'medium' ? '#ffa502' : '#00d4aa';
     return '<div class="bed-chip ' + sc + ' ' + bc + '" onclick="selectSimBed(\'' + p.bed + '\')">' +
       '<div class="w-3 h-3 rounded-full flex-shrink-0" style="background:' + dc + '"></div>' +
-      '<div class="flex-1 min-w-0"><p class="text-xs font-semibold text-white truncate">' + p.bed + '</p><p class="text-[10px] text-[#6b7d95] truncate">' + p.name + ' — Risk ' + r.score + '</p></div>' +
-      (S.selBed === p.bed ? '<i class="fas fa-check-circle text-brand-500 text-xs flex-shrink-0"></i>' : '') +
+      '<div class="flex-1 min-w-0"><p class="text-sm font-bold text-gray-900 truncate">' + p.bed + '</p><p class="text-[11px] font-medium text-gray-500 truncate">' + p.name + ' — Risk ' + r.score + '</p></div>' +
+      (S.selBed === p.bed ? '<i class="fas fa-check-circle text-brand-500 text-sm flex-shrink-0"></i>' : '') +
       '</div>';
   }).join('');
   $('bed-hint').textContent = S.selBed ? 'Selected: ' + S.selBed + '. Now choose a video source below.' : 'Click a bed to select, then choose a video source below';
@@ -638,11 +668,10 @@ async function toggleCam() {
   if (!bed || !S.patients[bed]) { toast('warning', 'Select Bed', 'Choose a patient bed first'); return; }
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480, facingMode: 'user' } });
-    S.cam.stream = stream; S.cam.bed = bed; S.cam.on = true; S.cam.prev = null;
+    S.cam.stream = stream; S.cam.bed = bed; S.cam.on = true; S.cam.prev = null; S.cam.moveHist = [];
     const vid = $('cam-vid'); vid.srcObject = stream; await vid.play();
     const c = $('cam-ov'); c.width = vid.videoWidth || 640; c.height = vid.videoHeight || 480;
-    $('cam-ph').style.display = 'none'; $('cam-btn').innerHTML = '<i class="fas fa-stop mr-1.5"></i>Stop Camera';
-    $('cam-res').textContent = c.width + 'x' + c.height;
+    $('cam-ph').style.display = 'none'; $('cam-btn').innerHTML = '<i class="fas fa-stop mr-2"></i>Stop Camera';
     if (!S.cam._hc) { S.cam._hc = document.createElement('canvas'); S.cam._hx = S.cam._hc.getContext('2d', { willReadFrequently: true }); }
     S.cam._hc.width = c.width; S.cam._hc.height = c.height;
     camLoop();
@@ -652,8 +681,8 @@ function stopCam() {
   if (S.cam.stream) S.cam.stream.getTracks().forEach(t => t.stop());
   S.cam.on = false; S.cam.stream = null; S.cam.bed = null; S.cam.prev = null;
   $('cam-vid').srcObject = null; const c = $('cam-ov'); c.getContext('2d').clearRect(0, 0, c.width, c.height);
-  $('cam-ph').style.display = 'flex'; $('cam-btn').innerHTML = '<i class="fas fa-play mr-1.5"></i>Start Camera';
-  $('cam-ms').textContent = '0'; $('cam-mbar').style.width = '0%'; $('cam-it').textContent = '00:00:00'; $('cam-fps').textContent = '--';
+  $('cam-ph').style.display = 'flex'; $('cam-btn').innerHTML = '<i class="fas fa-play mr-2"></i>Start Camera';
+  $('cam-ms').textContent = '0'; $('cam-mbar').style.width = '0%'; $('cam-it').textContent = '00:00:00';
 }
 function camLoop() {
   if (!S.cam.on) return;
@@ -661,15 +690,26 @@ function camLoop() {
   S.cam._hx.drawImage(vid, 0, 0, w, h); const cur = S.cam._hx.getImageData(0, 0, w, h);
   if (S.cam.prev) {
     let td = 0; const ov = ctx.createImageData(w, h), cd = cur.data, pd = S.cam.prev.data, od = ov.data;
-    for (let i = 0; i < cd.length; i += 16) { const d = Math.abs(cd[i]-pd[i])+Math.abs(cd[i+1]-pd[i+1])+Math.abs(cd[i+2]-pd[i+2]); if(d>60){td+=d;od[i]=0;od[i+1]=212;od[i+2]=170;od[i+3]=Math.min(d,140);} }
-    const nm = Math.min((td/((w*h/4)*300))*100,100); S.cam.score = nm; const mv = nm > CFG.MOVE_TH;
+    for (let i = 0; i < cd.length; i += 16) { 
+        const d = Math.abs(cd[i]-pd[i])+Math.abs(cd[i+1]-pd[i+1])+Math.abs(cd[i+2]-pd[i+2]); 
+        if(d>30){td+=d;od[i]=0;od[i+1]=212;od[i+2]=170;od[i+3]=Math.min(d,140);} 
+    }
+    const rawNorm = td / (w * h); 
+    if (!S.cam.moveHist) S.cam.moveHist = [];
+    S.cam.moveHist.push(rawNorm);
+    if (S.cam.moveHist.length > 10) S.cam.moveHist.shift();
+    const avgMove = S.cam.moveHist.reduce((a,b)=>a+b,0) / S.cam.moveHist.length;
+
+    const nm = Math.min(avgMove * 100, 100); S.cam.score = nm; const mv = nm > CFG.MOVE_TH;
     ctx.putImageData(ov, 0, 0);
     $('cam-ms').textContent = Math.round(nm); $('cam-mbar').style.width = nm + '%'; $('cam-mbar').style.background = mv ? '#00d4aa' : '#ff4757';
-    $('cam-mb').innerHTML = mv ? '<span class="dot on"></span><span class="text-xs text-brand-400 font-medium">Motion Detected</span>' : '<span class="dot off"></span><span class="text-xs text-red-400 font-medium">No Motion</span>';
+    $('cam-mb').innerHTML = mv ? '<span class="dot on"></span><span class="text-xs text-brand-600 font-bold ml-1.5">Motion Detected</span>' : '<span class="dot off"></span><span class="text-xs text-red-600 font-bold ml-1.5">No Motion</span>';
+    $('cam-mb').className = mv ? 'bg-brand-50 px-3 py-1.5 rounded-lg border border-brand-100' : 'bg-red-50 px-3 py-1.5 rounded-lg border border-red-100';
+
     if (mv && S.cam.bed && S.patients[S.cam.bed]) S.patients[S.cam.bed].lastMovement = Date.now();
     if (S.cam.bed && S.patients[S.cam.bed]) $('cam-it').textContent = fmtMs(Date.now() - S.patients[S.cam.bed].lastMovement);
   }
-  S.cam.prev = cur; S.cam._fc++; const n = Date.now(); if(n-S.cam._ft>=1000){S.cam.fps=S.cam._fc;S.cam._fc=0;S.cam._ft=n;$('cam-fps').textContent=S.cam.fps;}
+  S.cam.prev = cur;
   requestAnimationFrame(camLoop);
 }
 
@@ -698,9 +738,9 @@ function renderDash() {
   grid.innerHTML = ps.map(p => {
     const r=calcRisk(p),lv=riskLv(r.score),cc=lv==='high'?'critical':lv==='medium'?'medium':'',bc='risk-'+lv,bt=lv==='high'?'HIGH RISK':lv==='medium'?'MEDIUM':'LOW';
     const mv=(Date.now()-p.lastMovement)<5000,imm=Date.now()-p.lastMovement,gp=Math.min(r.score/100,1),circ=2*Math.PI*26,off=circ*(1-gp);
-    const gc=lv==='high'?'#ff4757':lv==='medium'?'#ffa502':'#00d4aa';
+    const gc=lv==='high'?'#e83e4c':lv==='medium'?'#d98200':'#00a888';
     const conds=p.conditions.length?p.conditions.map(c=>c.charAt(0).toUpperCase()+c.slice(1).replace('_',' ')).join(', '):'No conditions';
-    return '<div class="patient-card '+cc+'" onclick="showDetail(\''+p.bed+'\')"><div class="flex items-start justify-between mb-3"><div><p class="text-[11px] text-[#6b7d95] font-medium">'+p.bed+'</p><p class="font-display font-bold text-base text-white mt-0.5">'+p.name+'</p></div><span class="risk-badge '+bc+'">'+bt+'</span></div><div class="flex items-center gap-4"><div class="relative" style="width:62px;height:62px"><svg width="62" height="62" viewBox="0 0 62 62"><circle cx="31" cy="31" r="26" fill="none" stroke="#1a2540" stroke-width="5"/><circle cx="31" cy="31" r="26" fill="none" stroke="'+gc+'" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+circ+'" stroke-dashoffset="'+off+'" transform="rotate(-90 31 31)" class="gauge-ring"/></svg><div class="absolute inset-0 flex items-center justify-center"><span class="font-display font-bold text-sm text-white">'+r.score+'</span></div></div><div class="flex-1 space-y-2"><div class="flex items-center justify-between"><span class="text-[11px] text-[#6b7d95]">Status</span><span class="flex items-center gap-1.5 text-[11px] font-medium '+(mv?'text-brand-400':'text-red-400')+'"><span class="dot '+(mv?'on':'off')+'"></span>'+(mv?'Moving':'Still')+'</span></div><div class="flex items-center justify-between"><span class="text-[11px] text-[#6b7d95]">Immobile</span><span class="text-[11px] text-white font-medium" data-imm="'+p.bed+'">'+fmtMs(imm)+'</span></div><div class="flex items-center justify-between"><span class="text-[11px] text-[#6b7d95]">BMI</span><span class="text-[11px] text-white">'+p.bmi+'</span></div></div></div><div class="mt-3 pt-3 border-t border-[#1a2540] flex items-center justify-between"><span class="text-[10px] text-[#4a5a70]">'+conds+'</span><span class="text-[10px] text-brand-500"><i class="fas fa-arrow-right ml-1"></i></span></div></div>';
+    return '<div class="patient-card '+cc+'" onclick="showDetail(\''+p.bed+'\')"><div class="flex items-start justify-between mb-4"><div><p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">'+p.bed+'</p><p class="font-display font-bold text-xl text-gray-900 mt-1">'+p.name+'</p></div><span class="risk-badge '+bc+'">'+bt+'</span></div><div class="flex items-center gap-5"><div class="relative" style="width:62px;height:62px"><svg width="62" height="62" viewBox="0 0 62 62"><circle cx="31" cy="31" r="26" fill="none" stroke="#e5e7eb" stroke-width="5"/><circle cx="31" cy="31" r="26" fill="none" stroke="'+gc+'" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+circ+'" stroke-dashoffset="'+off+'" transform="rotate(-90 31 31)" class="gauge-ring"/></svg><div class="absolute inset-0 flex items-center justify-center"><span class="font-display font-bold text-base text-gray-900">'+r.score+'</span></div></div><div class="flex-1 space-y-2"><div class="flex items-center justify-between"><span class="text-xs font-bold text-gray-500 uppercase">Status</span><span class="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider '+(mv?'text-brand-600':'text-red-500')+'"><span class="dot '+(mv?'on':'off')+'"></span>'+(mv?'Moving':'Still')+'</span></div><div class="flex items-center justify-between"><span class="text-xs font-bold text-gray-500 uppercase">Immobile</span><span class="text-xs text-gray-900 font-bold" data-imm="'+p.bed+'">'+fmtMs(imm)+'</span></div><div class="flex items-center justify-between"><span class="text-xs font-bold text-gray-500 uppercase">BMI</span><span class="text-xs font-bold text-gray-900">'+p.bmi+'</span></div></div></div><div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between"><span class="text-[11px] font-medium text-gray-500">'+conds+'</span><span class="text-xs text-brand-600"><i class="fas fa-arrow-right ml-1"></i></span></div></div>';
   }).join('');
 }
 
@@ -710,8 +750,8 @@ function renderAlerts() {
   if(!S.alerts.length){list.innerHTML='';empty.classList.remove('hidden');return;}
   empty.classList.add('hidden');
   list.innerHTML = S.alerts.map(a => {
-    const rc=a.type==='critical'?'alert-critical':'alert-warning',ic=a.type==='critical'?'fa-exclamation-triangle text-red-400':'fa-exclamation-circle text-yellow-400',bc=a.type==='critical'?'risk-high':'risk-medium',bl=a.type==='critical'?'CRITICAL':'WARNING';
-    return '<div class="alert-row '+rc+'"><div class="w-10 h-10 rounded-lg '+(a.type==='critical'?'bg-red-500/10':'bg-yellow-500/10')+' flex items-center justify-center flex-shrink-0"><i class="fas '+ic+'"></i></div><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-0.5"><span class="font-semibold text-sm text-white">'+a.name+'</span><span class="text-[10px] text-[#6b7d95]">'+a.bed+'</span><span class="risk-badge '+bc+'">'+bl+'</span></div><p class="text-xs text-[#8899aa]">Risk: '+a.score+' | Immobile: '+a.immob.toFixed(1)+' min</p></div><div class="text-right flex-shrink-0"><p class="text-[11px] text-[#6b7d95]">'+fmtMs(Date.now()-new Date(a.time).getTime())+' ago</p><button onclick="showDetail(\''+a.bed+'\')" class="text-[11px] text-brand-500 hover:underline mt-1 cursor-pointer bg-transparent border-none">View</button></div></div>';
+    const rc=a.type==='critical'?'alert-critical':'alert-warning',ic=a.type==='critical'?'fa-exclamation-triangle text-red-600':'fa-exclamation-circle text-yellow-600',bc=a.type==='critical'?'risk-high':'risk-medium',bl=a.type==='critical'?'CRITICAL':'WARNING';
+    return '<div class="alert-row '+rc+'"><div class="w-12 h-12 rounded-xl '+(a.type==='critical'?'bg-red-100':'bg-yellow-100')+' flex items-center justify-center flex-shrink-0"><i class="fas '+ic+' text-lg"></i></div><div class="flex-1 min-w-0"><div class="flex items-center gap-3 mb-1"><span class="font-bold text-base text-gray-900">'+a.name+'</span><span class="text-[11px] font-bold text-gray-400 tracking-wider uppercase">'+a.bed+'</span><span class="risk-badge '+bc+'">'+bl+'</span></div><p class="text-sm font-medium text-gray-600">Quadratic Risk Score: <strong class="text-gray-900">'+a.score+'</strong> | Immobile: <strong class="text-gray-900">'+a.immob.toFixed(1)+' min</strong></p></div><div class="text-right flex-shrink-0"><p class="text-xs font-bold text-gray-400 uppercase tracking-wide">'+fmtMs(Date.now()-new Date(a.time).getTime())+' ago</p><button onclick="showDetail(\''+a.bed+'\')" class="text-xs font-bold text-brand-600 hover:underline mt-2 cursor-pointer bg-transparent border-none">View Patient</button></div></div>';
   }).join('');
 }
 function updateBadge(){const c=S.alerts.filter(a=>a.type==='critical').length,b=$('alert-badge');if(c>0){b.textContent=c;b.classList.remove('hidden');}else b.classList.add('hidden');}
@@ -721,20 +761,20 @@ function updateCamSelect(){const ps=Object.values(S.patients),s=$('cam-bed'),cv=
 function showDetail(bed) {
   const p=S.patients[bed]; if(!p) return;
   const risk=calcRisk(p),lv=riskLv(risk.score),th=thMin(p),imm=Date.now()-p.lastMovement,mv=imm<5000,bc='risk-'+lv,bl=lv.toUpperCase();
-  const maxF=30, bars=[{l:'Age Factor',v:risk.aw,c:'#6b7d95'},{l:'Conditions',v:risk.cw,c:'#ffa502'},{l:'Mobility',v:risk.mw,c:'#ff4757'},{l:'Immobility',v:Math.round(risk.immMin*0.5),c:'#00d4aa'}];
+  const maxF=30, bars=[{l:'Age Factor',v:risk.aw,c:'#9ca3af'},{l:'Conditions',v:risk.cw,c:'#f59e0b'},{l:'Mobility',v:risk.mw,c:'#ef4444'},{l:'Immobility (Non-Linear)',v:Math.round(risk.immMin*0.5),c:'#10b981'}];
   const int_=Math.min(risk.score/80,1),rgb=lv==='high'?'255,71,87':lv==='medium'?'255,165,2':'0,212,170',dot=lv==='high'?'#ff4757':lv==='medium'?'#ffa502':'#00d4aa',ht=lv==='high'?'pz-hot':'';
   let bodySvg='<svg viewBox="0 0 160 400" width="160" height="400" class="mx-auto"><defs><radialGradient id="pgr"><stop offset="0%" stop-color="rgba('+rgb+','+(int_*0.8)+')"/><stop offset="100%" stop-color="rgba('+rgb+',0)"/></radialGradient></defs>';
-  bodySvg+='<circle cx="80" cy="32" r="22" fill="#131c2d" stroke="#243050" stroke-width="1.2"/><rect x="70" y="52" width="20" height="10" rx="3" fill="#131c2d" stroke="#243050" stroke-width="1"/><rect x="42" y="62" width="76" height="110" rx="10" fill="#131c2d" stroke="#243050" stroke-width="1.2"/><rect x="18" y="68" width="24" height="80" rx="10" fill="#131c2d" stroke="#243050" stroke-width="1.2"/><rect x="118" y="68" width="24" height="80" rx="10" fill="#131c2d" stroke="#243050" stroke-width="1.2"/><rect x="48" y="172" width="28" height="155" rx="10" fill="#131c2d" stroke="#243050" stroke-width="1.2"/><rect x="84" y="172" width="28" height="155" rx="10" fill="#131c2d" stroke="#243050" stroke-width="1.2"/><ellipse cx="56" cy="340" rx="10" ry="7" fill="#131c2d" stroke="#243050" stroke-width="1"/><ellipse cx="104" cy="340" rx="10" ry="7" fill="#131c2d" stroke="#243050" stroke-width="1"/>';
+  bodySvg+='<circle cx="80" cy="32" r="22" fill="#e5e7eb" stroke="#d1d5db" stroke-width="1.2"/><rect x="70" y="52" width="20" height="10" rx="3" fill="#e5e7eb" stroke="#d1d5db" stroke-width="1"/><rect x="42" y="62" width="76" height="110" rx="10" fill="#e5e7eb" stroke="#d1d5db" stroke-width="1.2"/><rect x="18" y="68" width="24" height="80" rx="10" fill="#e5e7eb" stroke="#d1d5db" stroke-width="1.2"/><rect x="118" y="68" width="24" height="80" rx="10" fill="#e5e7eb" stroke="#d1d5db" stroke-width="1.2"/><rect x="48" y="172" width="28" height="155" rx="10" fill="#e5e7eb" stroke="#d1d5db" stroke-width="1.2"/><rect x="84" y="172" width="28" height="155" rx="10" fill="#e5e7eb" stroke="#d1d5db" stroke-width="1.2"/><ellipse cx="56" cy="340" rx="10" ry="7" fill="#e5e7eb" stroke="#d1d5db" stroke-width="1"/><ellipse cx="104" cy="340" rx="10" ry="7" fill="#e5e7eb" stroke="#d1d5db" stroke-width="1"/>';
   [{x:48,y:88,r:12},{x:112,y:88,r:12},{x:80,y:170,r:14},{x:56,y:182,r:11},{x:104,y:182,r:11},{x:60,y:272,r:9},{x:100,y:272,r:9},{x:56,y:340,r:10},{x:104,y:340,r:10}].forEach(z=>{bodySvg+='<circle cx="'+z.x+'" cy="'+z.y+'" r="'+(z.r*(0.6+int_*0.5))+'" fill="url(#pgr)" class="'+ht+'"/>';bodySvg+='<circle cx="'+z.x+'" cy="'+z.y+'" r="2.5" fill="'+dot+'" opacity="0.9"/>';});
   bodySvg+='</svg>';
   const hist=p.history.length>1?p.history:[];
   let sparkline='';
-  if(hist.length>1){const scores=hist.map(h=>h.score),maxS=Math.max(...scores,1),minS=Math.min(...scores,0),range=maxS-minS||1,pts=hist.map((h,i)=>((i/(hist.length-1))*200)+','+(50-((h.score-minS)/range)*40)).join(' '),slc=lv==='high'?'#ff4757':lv==='medium'?'#ffa502':'#00d4aa';
-  sparkline='<svg viewBox="0 0 200 55" width="100%" height="55" preserveAspectRatio="none"><polyline points="'+pts+'" fill="none" stroke="'+slc+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';hist.forEach((h,i)=>{const x=(i/(hist.length-1))*200,y=50-((h.score-minS)/range)*40,dc=riskLv(h.score)==='high'?'#ff4757':riskLv(h.score)==='medium'?'#ffa502':'#00d4aa';sparkline+='<circle cx="'+x+'" cy="'+y+'" r="2" fill="'+dc+'"/>';});sparkline+='</svg>';}else{sparkline='<p class="text-xs text-[#4a5a70] text-center py-4">Collecting data...</p>';}
-  const condHtml=p.conditions.length?p.conditions.map(c=>'<span class="inline-block px-2.5 py-1 rounded-md bg-sf-600 text-xs text-[#c8d6e5] mr-1.5 mb-1.5">'+c.charAt(0).toUpperCase()+c.slice(1).replace('_',' ')+'</span>').join(''):'<p class="text-xs text-[#4a5a70]">None reported</p>';
-  const barsHtml=bars.map(b=>'<div><div class="flex items-center justify-between text-[11px] mb-1"><span class="text-[#8899aa]">'+b.l+'</span><span class="text-white font-medium">+'+b.v+'</span></div><div class="h-1.5 rounded bg-[#131c2d] overflow-hidden"><div class="h-full rounded" style="width:'+Math.min(b.v/maxF*100,100)+'%;background:'+b.c+'"></div></div></div>').join('');
-  const gp=Math.min(risk.score/100,1),circ=2*Math.PI*42,dashOff=circ*(1-gp),gc=lv==='high'?'#ff4757':lv==='medium'?'#ffa502':'#00d4aa';
-  $('detail-inner').innerHTML='<div class="p-6"><div class="flex items-start justify-between mb-6"><div><p class="text-xs text-[#6b7d95] mb-1">'+p.bed+'</p><h3 class="font-display font-bold text-xl text-white">'+p.name+'</h3><div class="flex items-center gap-3 mt-2 text-xs text-[#8899aa]"><span>'+p.age+' yrs, '+p.gender+'</span><span class="text-[#243050]">|</span><span>BMI '+p.bmi+' ('+p.bmiCat+')</span><span class="text-[#243050]">|</span><span class="flex items-center gap-1.5"><span class="dot '+(mv?'on':'off')+'"></span>'+(mv?'Moving':'Still')+'</span></div></div><div class="flex items-center gap-2"><span class="risk-badge '+bc+' text-sm">'+bl+'</span><button onclick="closeDetail()" class="w-8 h-8 rounded-lg bg-sf-700 border border-[#1a2540] flex items-center justify-center text-[#6b7d95] hover:text-white transition-colors cursor-pointer"><i class="fas fa-times text-xs"></i></button></div></div><div class="grid grid-cols-3 gap-5"><div class="col-span-1 space-y-4"><div class="p-4 rounded-xl bg-sf-800 border border-[#1a2540]"><h4 class="text-xs font-semibold text-[#8899aa] uppercase tracking-wider mb-3">Patient Info</h4><div class="space-y-2.5 text-xs"><div class="flex justify-between"><span class="text-[#6b7d95]">Height</span><span class="text-white">'+p.height+' cm</span></div><div class="flex justify-between"><span class="text-[#6b7d95]">Weight</span><span class="text-white">'+p.weight+' kg</span></div><div class="flex justify-between"><span class="text-[#6b7d95]">Mobility</span><span class="text-white capitalize">'+p.mobility+' Mobile</span></div><div class="flex justify-between"><span class="text-[#6b7d95]">Admitted</span><span class="text-white">'+new Date(p.admitted).toLocaleTimeString()+'</span></div><div class="flex justify-between"><span class="text-[#6b7d95]">Immobile For</span><span class="text-white font-semibold">'+fmtMin(imm)+' min</span></div><div class="flex justify-between"><span class="text-[#6b7d95]">Alert Threshold</span><span class="text-white">'+th.toFixed(0)+' min</span></div></div></div><div class="p-4 rounded-xl bg-sf-800 border border-[#1a2540]"><h4 class="text-xs font-semibold text-[#8899aa] uppercase tracking-wider mb-3">Conditions</h4>'+condHtml+'</div><button onclick="removePatient(\''+p.bed+'\');closeDetail()" class="btn btn-s w-full text-xs text-red-400 border-red-500/20 hover:bg-red-500/5"><i class="fas fa-trash mr-1.5"></i>Remove Patient</button></div><div class="col-span-1"><div class="p-4 rounded-xl bg-sf-800 border border-[#1a2540]"><h4 class="text-xs font-semibold text-[#8899aa] uppercase tracking-wider mb-3">Body Pressure Map</h4>'+bodySvg+'<div class="flex items-center justify-center gap-4 mt-3 text-[10px] text-[#6b7d95]"><span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-brand-500/50"></span>Low</span><span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></span>Medium</span><span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-red-500/50"></span>High</span></div></div></div><div class="col-span-1 space-y-4"><div class="p-4 rounded-xl bg-sf-800 border border-[#1a2540] text-center"><h4 class="text-xs font-semibold text-[#8899aa] uppercase tracking-wider mb-3">Risk Score</h4><div class="relative inline-block" style="width:100px;height:100px"><svg width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="#1a2540" stroke-width="7"/><circle cx="50" cy="50" r="42" fill="none" stroke="'+gc+'" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+circ+'" stroke-dashoffset="'+dashOff+'" transform="rotate(-90 50 50)" class="gauge-ring"/></svg><div class="absolute inset-0 flex items-center justify-center"><span class="font-display font-bold text-2xl text-white">'+risk.score+'</span></div></div></div><div class="p-4 rounded-xl bg-sf-800 border border-[#1a2540]"><h4 class="text-xs font-semibold text-[#8899aa] uppercase tracking-wider mb-3">Risk Breakdown</h4><div class="space-y-3">'+barsHtml+'</div></div><div class="p-4 rounded-xl bg-sf-800 border border-[#1a2540]"><h4 class="text-xs font-semibold text-[#8899aa] uppercase tracking-wider mb-2">Risk History</h4>'+sparkline+'</div></div></div></div>';
+  if(hist.length>1){const scores=hist.map(h=>h.score),maxS=Math.max(...scores,1),minS=Math.min(...scores,0),range=maxS-minS||1,pts=hist.map((h,i)=>((i/(hist.length-1))*200)+','+(50-((h.score-minS)/range)*40)).join(' '),slc=lv==='high'?'#e83e4c':lv==='medium'?'#d98200':'#00a888';
+  sparkline='<svg viewBox="0 0 200 55" width="100%" height="55" preserveAspectRatio="none"><polyline points="'+pts+'" fill="none" stroke="'+slc+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';hist.forEach((h,i)=>{const x=(i/(hist.length-1))*200,y=50-((h.score-minS)/range)*40,dc=riskLv(h.score)==='high'?'#e83e4c':riskLv(h.score)==='medium'?'#d98200':'#00a888';sparkline+='<circle cx="'+x+'" cy="'+y+'" r="3" fill="'+dc+'" stroke="#fff" stroke-width="1"/>';});sparkline+='</svg>';}else{sparkline='<p class="text-xs font-bold text-gray-400 uppercase tracking-widest text-center py-6">Collecting data...</p>';}
+  const condHtml=p.conditions.length?p.conditions.map(c=>'<span class="inline-block px-3 py-1.5 rounded-lg bg-gray-100 font-bold text-[11px] text-gray-600 mr-2 mb-2 border border-gray-200">'+c.charAt(0).toUpperCase()+c.slice(1).replace('_',' ')+'</span>').join(''):'<p class="text-xs font-medium text-gray-500">None reported</p>';
+  const barsHtml=bars.map(b=>'<div><div class="flex items-center justify-between text-xs font-bold mb-1.5"><span class="text-gray-500 uppercase">'+b.l+'</span><span class="text-gray-900">+'+b.v+'</span></div><div class="h-2 rounded-full bg-gray-100 overflow-hidden"><div class="h-full rounded-full" style="width:'+Math.min(b.v/maxF*100,100)+'%;background:'+b.c+'"></div></div></div>').join('');
+  const gp=Math.min(risk.score/100,1),circ=2*Math.PI*42,dashOff=circ*(1-gp),gc=lv==='high'?'#e83e4c':lv==='medium'?'#d98200':'#00a888';
+  $('detail-inner').innerHTML='<div class="p-8"><div class="flex items-start justify-between mb-8"><div><p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">'+p.bed+'</p><h3 class="font-display font-bold text-3xl text-gray-900">'+p.name+'</h3><div class="flex items-center gap-3 mt-3 text-xs font-bold text-gray-500"><span>'+p.age+' yrs, '+p.gender+'</span><span class="text-gray-300">|</span><span>BMI '+p.bmi+' ('+p.bmiCat+')</span><span class="text-gray-300">|</span><span class="flex items-center gap-1.5 uppercase tracking-wider"><span class="dot '+(mv?'on':'off')+'"></span>'+(mv?'Moving':'Still')+'</span></div></div><div class="flex items-center gap-3"><span class="risk-badge '+bc+' text-sm px-4 py-1.5">'+bl+'</span><button onclick="closeDetail()" class="w-10 h-10 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer"><i class="fas fa-times"></i></button></div></div><div class="grid grid-cols-3 gap-6"><div class="col-span-1 space-y-5"><div class="p-5 rounded-2xl bg-gray-50 border border-gray-100"><h4 class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">Patient Info</h4><div class="space-y-3 text-sm font-medium"><div class="flex justify-between"><span class="text-gray-500">Height</span><span class="text-gray-900 font-bold">'+p.height+' cm</span></div><div class="flex justify-between"><span class="text-gray-500">Weight</span><span class="text-gray-900 font-bold">'+p.weight+' kg</span></div><div class="flex justify-between"><span class="text-gray-500">Mobility</span><span class="text-gray-900 font-bold capitalize">'+p.mobility+' Mobile</span></div><div class="flex justify-between"><span class="text-gray-500">Admitted</span><span class="text-gray-900 font-bold">'+new Date(p.admitted).toLocaleTimeString()+'</span></div><div class="flex justify-between border-t border-gray-200 pt-3"><span class="text-gray-500">Immobile For</span><span class="text-gray-900 font-bold">'+fmtMin(imm)+' min</span></div><div class="flex justify-between"><span class="text-gray-500">Alert Threshold</span><span class="text-gray-900 font-bold">'+th.toFixed(0)+' min</span></div></div></div><div class="p-5 rounded-2xl bg-gray-50 border border-gray-100"><h4 class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">Conditions</h4>'+condHtml+'</div><button onclick="removePatient(\''+p.bed+'\');closeDetail()" class="btn btn-s w-full text-sm py-3 text-red-500 border-red-200 hover:bg-red-50 hover:text-red-600"><i class="fas fa-trash mr-2"></i>Remove Patient</button></div><div class="col-span-1"><div class="p-5 rounded-2xl bg-gray-50 border border-gray-100 h-full flex flex-col"><h4 class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4 text-center">Body Pressure Map</h4><div class="flex-1 flex items-center justify-center">'+bodySvg+'</div><div class="flex items-center justify-center gap-5 mt-4 text-xs font-bold text-gray-500 uppercase tracking-wide"><span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-brand-200"></span>Low</span><span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-yellow-200"></span>Med</span><span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-red-300"></span>High</span></div></div></div><div class="col-span-1 space-y-5"><div class="p-5 rounded-2xl bg-gray-50 border border-gray-100 text-center"><h4 class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">Quadratic Risk Score</h4><div class="relative inline-block" style="width:100px;height:100px"><svg width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="#e5e7eb" stroke-width="7"/><circle cx="50" cy="50" r="42" fill="none" stroke="'+gc+'" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+circ+'" stroke-dashoffset="'+dashOff+'" transform="rotate(-90 50 50)" class="gauge-ring"/></svg><div class="absolute inset-0 flex items-center justify-center"><span class="font-display font-bold text-3xl text-gray-900">'+risk.score+'</span></div></div></div><div class="p-5 rounded-2xl bg-gray-50 border border-gray-100"><h4 class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">Risk Breakdown</h4><div class="space-y-4">'+barsHtml+'</div></div><div class="p-5 rounded-2xl bg-gray-50 border border-gray-100"><h4 class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">Risk History</h4>'+sparkline+'</div></div></div></div>';
   $('detail-modal').classList.add('show');
 }
 function closeDetail(){$('detail-modal').classList.remove('show');}
@@ -760,7 +800,7 @@ function loadSamples(){
   [{bed:'BED-01',name:'Rahul Sharma',age:65,gender:'Male',height:170,weight:79,conditions:['diabetes'],mobility:'immobile',h:3.5},{bed:'BED-02',name:'Priya Patel',age:45,gender:'Female',height:162,weight:58,conditions:['surgery'],mobility:'partially',h:2},{bed:'BED-03',name:'Amit Kumar',age:72,gender:'Male',height:168,weight:75,conditions:['diabetes','paralysis'],mobility:'immobile',h:5},{bed:'BED-04',name:'Sneha Reddy',age:35,gender:'Female',height:165,weight:55,conditions:[],mobility:'fully',h:1},{bed:'BED-05',name:'Mohammed Irfan',age:58,gender:'Male',height:175,weight:82,conditions:['muscle_injury','surgery'],mobility:'partially',h:4},{bed:'BED-06',name:'Lakshmi Nair',age:80,gender:'Female',height:155,weight:60,conditions:['diabetes','paralysis','surgery'],mobility:'immobile',h:6}].forEach(d=>{
     const b=bmiVal(d.weight,d.height),sp=mkSim(d.mobility),imMs=d.mobility==='immobile'?(40+Math.random()*60)*60000:d.mobility==='partially'?(10+Math.random()*20)*60000:(1+Math.random()*5)*60000;
     S.patients[d.bed]={id:d.bed,bed:d.bed,name:d.name,age:d.age,gender:d.gender,height:d.height,weight:d.weight,bmi:Math.round(b*10)/10,bmiCat:bmiLabel(b),conditions:d.conditions,mobility:d.mobility,admitted:new Date(Date.now()-d.h*3600000).toISOString(),lastMovement:Date.now()-imMs,simInt:sp.intv,simNext:Date.now()+sp.intv*(0.6+Math.random()*0.8),history:[],_lh:0,_si:0};
-    const p=S.patients[d.bed];for(let i=10;i>=0;i--){const ft=Date.now()-i*10000,fi=(ft-p.lastMovement)/60000,fs=Math.round(fi*0.5+ageW(p.age)+condW(p.conditions)+mobW(p.mobility));p.history.push({time:ft,score:Math.max(0,fs)});}
+    const p=S.patients[d.bed];for(let i=10;i>=0;i--){const ft=Date.now()-i*10000,fi=(ft-p.lastMovement)/60000,fs=calcRisk({lastMovement:ft,age:p.age,conditions:p.conditions,mobility:p.mobility}).score;p.history.push({time:ft,score:Math.max(0,fs)});}
   });
 }
 
