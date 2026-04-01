@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareSightAI — Intelligent Patient Monitoring</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script>
+tailwind.config={theme:{extend:{colors:{brand:{400:'#1affba',500:'#00d4aa',600:'#00a888',700:'#007d66'},sf:{900:'#070b12',800:'#0d1320',700:'#131c2d',600:'#1a2540',500:'#243050',400:'#2e3d5a'}},fontFamily:{display:['Outfit','sans-serif'],body:['DM Sans','sans-serif']}}}}
+</script>
+<style>
+:root{--accent:#00d4aa;--danger:#ff4757;--warning:#ffa502;--success:#00d4aa}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#070b12;color:#e8edf4;overflow:hidden;height:100vh}
+h1,h2,h3,h4,h5,h6{font-family:'Outfit',sans-serif}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:#0d1320}
+::-webkit-scrollbar-thumb{background:#243050;border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:#2e3d5a}
+
+.sidebar{width:240px;background:#0d1320;border-right:1px solid #1a2540;display:flex;flex-direction:column;height:100vh;position:fixed;left:0;top:0;z-index:50}
+.sidebar .logo{padding:24px 20px;border-bottom:1px solid #1a2540}
+.sidebar .nav-item{display:flex;align-items:center;gap:12px;padding:12px 20px;cursor:pointer;transition:all .2s;color:#6b7d95;border-left:3px solid transparent;font-size:14px}
+.sidebar .nav-item:hover{background:#131c2d;color:#e8edf4}
+.sidebar .nav-item.active{background:rgba(0,212,170,.08);color:var(--accent);border-left-color:var(--accent)}
+.sidebar .nav-item i{width:20px;text-align:center;font-size:15px}
+
+.main{margin-left:240px;height:100vh;display:flex;flex-direction:column}
+.topbar{height:60px;background:#0d1320;border-bottom:1px solid #1a2540;display:flex;align-items:center;justify-content:space-between;padding:0 28px;flex-shrink:0}
+.content{flex:1;overflow-y:auto;padding:28px;background:radial-gradient(ellipse at 20% 0%,rgba(0,212,170,.03) 0%,transparent 60%),radial-gradient(ellipse at 80% 100%,rgba(0,100,80,.03) 0%,transparent 60%),#070b12}
+
+.view{display:none}.view.active{display:block}
+
+.stat-card{background:#0d1320;border:1px solid #1a2540;border-radius:12px;padding:20px;transition:all .3s}
+.stat-card:hover{border-color:#243050;transform:translateY(-2px)}
+.stat-card .icon-box{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+
+.patient-card{background:#0d1320;border:1px solid #1a2540;border-radius:14px;padding:20px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+.patient-card:hover{border-color:#243050;transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.patient-card.critical{border-color:rgba(255,71,87,.4);animation:criticalPulse 2s ease-in-out infinite}
+.patient-card.critical::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,71,87,.06),transparent 60%);pointer-events:none}
+.patient-card.medium{border-color:rgba(255,165,2,.3)}
+.patient-card.medium::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,165,2,.04),transparent 60%);pointer-events:none}
+
+@keyframes criticalPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,71,87,.15)}50%{box-shadow:0 0 20px 4px rgba(255,71,87,.1)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes slideOut{from{transform:translateX(0);opacity:1}to{transform:translateX(120%);opacity:0}}
+@keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 3px rgba(255,71,87,.4))}50%{filter:drop-shadow(0 0 10px rgba(255,71,87,.7))}}
+
+.risk-badge{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.risk-low{background:rgba(0,212,170,.12);color:#00d4aa}
+.risk-medium{background:rgba(255,165,2,.12);color:#ffa502}
+.risk-high{background:rgba(255,71,87,.12);color:#ff4757}
+
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.status-dot.moving{background:#00d4aa;box-shadow:0 0 6px rgba(0,212,170,.5)}
+.status-dot.still{background:#ff4757;animation:pulse 1.5s infinite}
+
+.gauge-ring{transition:stroke-dashoffset .8s ease}
+
+.form-input{background:#0d1320;border:1px solid #1a2540;border-radius:8px;padding:10px 14px;color:#e8edf4;font-size:14px;width:100%;transition:border-color .2s;font-family:'DM Sans',sans-serif}
+.form-input:focus{outline:none;border-color:var(--accent)}
+.form-input::placeholder{color:#4a5a70}
+select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236b7d95' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+select.form-input option{background:#0d1320;color:#e8edf4}
+
+.toggle-pill{display:inline-flex;padding:6px 16px;border-radius:8px;font-size:13px;cursor:pointer;transition:all .2s;border:1px solid #1a2540;background:#0d1320;color:#6b7d95;user-select:none}
+.toggle-pill.active{background:rgba(0,212,170,.12);border-color:rgba(0,212,170,.3);color:var(--accent)}
+.toggle-pill.active-danger{background:rgba(255,71,87,.12);border-color:rgba(255,71,87,.3);color:var(--danger)}
+
+.mobility-card{padding:14px;border-radius:10px;border:1px solid #1a2540;background:#0d1320;cursor:pointer;transition:all .2s;text-align:center;flex:1}
+.mobility-card:hover{border-color:#243050}
+.mobility-card.selected{border-color:var(--accent);background:rgba(0,212,170,.06)}
+
+.btn-primary{background:var(--accent);color:#070b12;font-weight:600;padding:12px 28px;border-radius:10px;border:none;cursor:pointer;font-size:14px;transition:all .2s;font-family:'DM Sans',sans-serif}
+.btn-primary:hover{background:#1affba;transform:translateY(-1px);box-shadow:0 4px 15px rgba(0,212,170,.3)}
+.btn-secondary{background:#131c2d;color:#e8edf4;font-weight:500;padding:10px 20px;border-radius:10px;border:1px solid #1a2540;cursor:pointer;font-size:13px;transition:all .2s;font-family:'DM Sans',sans-serif}
+.btn-secondary:hover{border-color:#243050;background:#1a2540}
+
+.toast-container{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px;pointer-events:none}
+.toast{pointer-events:auto;padding:14px 18px;border-radius:10px;display:flex;align-items:flex-start;gap:12px;min-width:320px;max-width:420px;animation:slideIn .4s ease;border:1px solid;backdrop-filter:blur(12px)}
+.toast.removing{animation:slideOut .3s ease forwards}
+.toast-critical{background:rgba(255,71,87,.12);border-color:rgba(255,71,87,.25);color:#ff8a94}
+.toast-warning{background:rgba(255,165,2,.12);border-color:rgba(255,165,2,.25);color:#ffc04d}
+.toast-info{background:rgba(0,212,170,.12);border-color:rgba(0,212,170,.25);color:#66e8cc}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(4,6,10,.8);backdrop-filter:blur(6px);z-index:100;display:none;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal-content{background:#0d1320;border:1px solid #1a2540;border-radius:16px;max-width:900px;width:95%;max-height:90vh;overflow-y:auto;animation:fadeIn .3s ease}
+
+.pressure-point{transition:all .5s ease}
+.pressure-hot{animation:glow 2s ease-in-out infinite}
+
+.alert-row{display:flex;align-items:center;gap:16px;padding:16px 20px;border-radius:10px;border:1px solid #1a2540;background:#0d1320;transition:all .2s}
+.alert-row:hover{background:#131c2d}
+.alert-critical{border-color:rgba(255,71,87,.3);background:rgba(255,71,87,.04)}
+.alert-warning{border-color:rgba(255,165,2,.3);background:rgba(255,165,2,.04)}
+
+.video-container{position:relative;border-radius:12px;overflow:hidden;background:#000;aspect-ratio:4/3}
+.video-container video,.video-container canvas{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+.movement-bar{height:6px;border-radius:3px;background:#131c2d;overflow:hidden}
+.movement-bar-fill{height:100%;border-radius:3px;transition:width .2s;background:var(--accent)}
+
+@media(max-width:768px){
+  .sidebar{display:none}
+  .main{margin-left:0}
+}
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-lg bg-brand-500/15 flex items-center justify-center">
+        <i class="fas fa-heartbeat text-brand-500 text-base"></i>
+      </div>
+      <div>
+        <h1 class="font-display font-bold text-[15px] text-white leading-tight">CareSightAI</h1>
+        <p class="text-[10px] text-[#6b7d95] tracking-wider uppercase">Patient Monitor</p>
+      </div>
+    </div>
+  </div>
+  <nav class="flex-1 py-4">
+    <div class="px-5 mb-2"><span class="text-[10px] font-semibold text-[#4a5a70] uppercase tracking-widest">Main</span></div>
+    <div class="nav-item active" data-view="dashboard"><i class="fas fa-th-large"></i>Dashboard</div>
+    <div class="nav-item" data-view="add-patient"><i class="fas fa-user-plus"></i>Add Patient</div>
+    <div class="nav-item" data-view="monitoring"><i class="fas fa-video"></i>Live Monitoring</div>
+    <div class="px-5 mt-5 mb-2"><span class="text-[10px] font-semibold text-[#4a5a70] uppercase tracking-widest">System</span></div>
+    <div class="nav-item" data-view="alerts"><i class="fas fa-bell"></i>Alerts <span id="alert-badge" class="ml-auto bg-red-500/20 text-red-400 text-[10px] font-bold px-2 py-0.5 rounded-full hidden">0</span></div>
+  </nav>
+  <div class="p-4 border-t border-[#1a2540]">
+    <div class="flex items-center gap-3 px-2">
+      <div class="w-8 h-8 rounded-full bg-sf-600 flex items-center justify-center"><i class="fas fa-user-nurse text-xs text-brand-500"></i></div>
+      <div><p class="text-xs font-medium text-white">Nurse Station</p><p class="text-[10px] text-[#6b7d95]">Ward A — ICU</p></div>
+    </div>
+  </div>
+</aside>
+
+<!-- Main -->
+<div class="main">
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="flex items-center gap-4">
+      <h2 class="font-display font-semibold text-sm" id="page-title">Dashboard</h2>
+      <div class="flex items-center gap-2 ml-4 px-3 py-1 rounded-full bg-brand-500/8 border border-brand-500/20">
+        <span class="status-dot moving"></span>
+        <span class="text-[11px] text-brand-500 font-medium">System Active</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-xs text-[#6b7d95]" id="live-clock"></span>
+      <button onclick="toggleSound()" id="sound-btn" class="w-8 h-8 rounded-lg bg-sf-700 border border-[#1a2540] flex items-center justify-center text-[#6b7d95] hover:text-white transition-colors cursor-pointer" title="Toggle sound">
+        <i class="fas fa-volume-up text-xs"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Content Area -->
+  <div class="content">
+
+    <!-- Dashboard View -->
+    <div class="view active" id="view-dashboard">
+      <!-- Stats Row -->
+      <div class="grid grid-cols-4 gap-4 mb-6" id="stats-row">
+        <div class="stat-card">
+          <div class="flex items-center justify-between mb-3">
+            <div class="icon-box bg-brand-500/10 text-brand-500"><i class="fas fa-bed"></i></div>
+            <span class="text-[11px] text-[#6b7d95]">Total</span>
+          </div>
+          <p class="font-display font-bold text-2xl text-white" id="stat-total">0</p>
+          <p class="text-xs text-[#6b7d95] mt-1">Patients Monitored</p>
+        </div>
+        <div class="stat-card">
+          <div class="flex items-center justify-between mb-3">
+            <div class="icon-box bg-red-500/10 text-red-400"><i class="fas fa-exclamation-triangle"></i></div>
+            <span class="text-[11px] text-[#6b7d95]">Critical</span>
+          </div>
+          <p class="font-display font-bold text-2xl text-red-400" id="stat-critical">0</p>
+          <p class="text-xs text-[#6b7d95] mt-1">High Risk</p>
+        </div>
+        <div class="stat-card">
+          <div class="flex items-center justify-between mb-3">
+            <div class="icon-box bg-yellow-500/10 text-yellow-400"><i class="fas fa-exclamation-circle"></i></div>
+            <span class="text-[11px] text-[#6b7d95]">Warning</span>
+          </div>
+          <p class="font-display font-bold text-2xl text-yellow-400" id="stat-warning">0</p>
+          <p class="text-xs text-[#6b7d95] mt-1">Medium Risk</p>
+        </div>
+        <div class="stat-card">
+          <div class="flex items-center justify-between mb-3">
+            <div class="icon-box bg-brand-500/10 text-brand-500"><i class="fas fa-check-circle"></i></div>
+            <span class="text-[11px] text-[#6b7d95]">Stable</span>
+          </div>
+          <p class="font-display font-bold text-2xl text-brand-500" id="stat-stable">0</p>
+          <p class="text-xs text-[#6b7d95] mt-1">Low Risk</p>
+        </div>
+      </div>
+      <!-- Patient Cards Grid -->
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-display font-semibold text-base text-white">Patient Beds</h3>
+        <div class="flex items-center gap-3 text-[11px] text-[#6b7d95]">
+          <span><span class="inline-block w-2 h-2 rounded-full bg-brand-500 mr-1"></span>Low</span>
+          <span><span class="inline-block w-2 h-2 rounded-full bg-yellow-400 mr-1"></span>Medium</span>
+          <span><span class="inline-block w-2 h-2 rounded-full bg-red-400 mr-1"></span>High</span>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-4" id="patient-grid"></div>
+      <div id="empty-state" class="hidden text-center py-20">
+        <i class="fas fa-procedures text-4xl text-[#243050] mb-4"></i>
+        <p class="text-[#4a5a70] text-sm">No patients registered yet</p>
+        <button onclick="navigateTo('add-patient')" class="btn-primary mt-4 text-sm">Add First Patient</button>
+      </div>
+    </div>
+
+    <!-- Add Patient View -->
+    <div class="view" id="view-add-patient">
+      <div class="max-w-2xl">
+        <h3 class="font-display font-bold text-xl text-white mb-1">Patient Intake</h3>
+        <p class="text-sm text-[#6b7d95] mb-6">Enter patient details to begin monitoring</p>
+        <form id="patient-form" onsubmit="handleAddPatient(event)">
+          <!-- Bed & Name -->
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="text-xs font-medium text-[#8899aa] mb-1.5 block">Bed Number</label>
+              <input type="text" id="f-bed" class="form-input" placeholder="e.g. BED-05" required>
+            </div>
+            <div>
+              <label class="text-xs font-medium text-[#8899aa] mb-1.5 block">Full Name</label>
+              <input type="text" id="f-name" class="form-input" placeholder="Patient name" required>
+            </div>
+          </div>
+          <!-- Age & Gender -->
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="text-xs font-medium text-[#8899aa] mb-1.5 block">Age</label>
+              <input type="number" id="f-age" class="form-input" placeholder="Years" min="1" max="120" required>
+            </div>
+            <div>
+              <label class="text-xs font-medium text-[#8899aa] mb-1.5 block">Gender</label>
+              <select id="f-gender" class="form-input" required>
+                <option value="">Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+          <!-- Height & Weight -->
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="text-xs font-medium text-[#8899aa] mb-1.5 block">Height (cm)</label>
+              <input type="number" id="f-height" class="form-input" placeholder="170" min="50" max="250" required>
+            </div>
+            <div>
+              <label class="text-xs font-medium text-[#8899aa] mb-1.5 block">Weight (kg)</label>
+              <input type="number" id="f-weight" class="form-input" placeholder="70" min="10" max="300" required>
+            </div>
+          </div>
+          <!-- BMI Display -->
+          <div class="mb-5 p-3 rounded-lg bg-sf-700/50 border border-[#1a2540] flex items-center gap-3">
+            <span class="text-xs text-[#6b7d95]">Auto-calculated BMI:</span>
+            <span class="font-display font-bold text-lg text-white" id="live-bmi">--</span>
+            <span class="text-xs text-[#6b7d95]" id="bmi-category"></span>
+          </div>
+          <!-- Medical Conditions -->
+          <div class="mb-5">
+            <label class="text-xs font-medium text-[#8899aa] mb-2.5 block">Medical Conditions</label>
+            <div class="flex flex-wrap gap-2" id="condition-toggles">
+              <span class="toggle-pill" data-cond="diabetes" onclick="toggleCondition(this)"><i class="fas fa-syringe mr-1.5 text-[10px]"></i>Diabetes</span>
+              <span class="toggle-pill" data-cond="paralysis" onclick="toggleCondition(this)"><i class="fas fa-wheelchair mr-1.5 text-[10px]"></i>Paralysis</span>
+              <span class="toggle-pill" data-cond="muscle_injury" onclick="toggleCondition(this)"><i class="fas fa-band-aid mr-1.5 text-[10px]"></i>Muscle Injury</span>
+              <span class="toggle-pill" data-cond="surgery" onclick="toggleCondition(this)"><i class="fas fa-cut mr-1.5 text-[10px]"></i>Surgery History</span>
+            </div>
+          </div>
+          <!-- Mobility Level -->
+          <div class="mb-6">
+            <label class="text-xs font-medium text-[#8899aa] mb-2.5 block">Mobility Level</label>
+            <div class="flex gap-3" id="mobility-cards">
+              <div class="mobility-card" data-mob="fully" onclick="selectMobility(this)">
+                <i class="fas fa-walking text-lg text-brand-500 mb-2"></i>
+                <p class="text-xs font-semibold text-white">Fully Mobile</p>
+                <p class="text-[10px] text-[#6b7d95] mt-1">Independent</p>
+              </div>
+              <div class="mobility-card" data-mob="partially" onclick="selectMobility(this)">
+                <i class="fas fa-crutch text-lg text-yellow-400 mb-2"></i>
+                <p class="text-xs font-semibold text-white">Partially Mobile</p>
+                <p class="text-[10px] text-[#6b7d95] mt-1">Needs assistance</p>
+              </div>
+              <div class="mobility-card" data-mob="immobile" onclick="selectMobility(this)">
+                <i class="fas fa-bed text-lg text-red-400 mb-2"></i>
+                <p class="text-xs font-semibold text-white">Immobile</p>
+                <p class="text-[10px] text-[#6b7d95] mt-1">Bedridden</p>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" id="f-conditions" value="[]">
+          <input type="hidden" id="f-mobility" value="">
+          <button type="submit" class="btn-primary w-full"><i class="fas fa-plus mr-2"></i>Register Patient</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Monitoring View -->
+    <div class="view" id="view-monitoring">
+      <div class="grid grid-cols-5 gap-6">
+        <div class="col-span-3">
+          <div class="video-container" id="video-container">
+            <video id="cam-video" autoplay playsinline muted></video>
+            <canvas id="cam-overlay"></canvas>
+            <div id="cam-placeholder" class="absolute inset-0 flex flex-col items-center justify-center bg-sf-800 z-10">
+              <i class="fas fa-video-slash text-3xl text-[#243050] mb-3"></i>
+              <p class="text-sm text-[#4a5a70]">Camera not active</p>
+            </div>
+          </div>
+          <div class="mt-3 flex items-center gap-3">
+            <select id="monitor-bed-select" class="form-input text-sm flex-1">
+              <option value="">Select bed to monitor...</option>
+            </select>
+            <button id="cam-toggle-btn" onclick="toggleCamera()" class="btn-primary text-sm whitespace-nowrap"><i class="fas fa-play mr-1.5"></i>Start</button>
+          </div>
+        </div>
+        <div class="col-span-2 space-y-4">
+          <div class="stat-card">
+            <h4 class="text-xs font-semibold text-[#8899aa] mb-3 uppercase tracking-wider">Movement Analysis</h4>
+            <div class="flex items-end justify-between mb-3">
+              <div>
+                <p class="font-display font-bold text-3xl text-white" id="mov-score">0</p>
+                <p class="text-[11px] text-[#6b7d95]">Motion Score</p>
+              </div>
+              <div class="flex items-center gap-2" id="mov-status-badge">
+                <span class="status-dot still"></span>
+                <span class="text-xs text-red-400 font-medium">No Motion</span>
+              </div>
+            </div>
+            <div class="movement-bar"><div class="movement-bar-fill" id="mov-bar" style="width:0%"></div></div>
+            <p class="text-[10px] text-[#4a5a70] mt-2">Threshold: 15 | Frame differencing active</p>
+          </div>
+          <div class="stat-card">
+            <h4 class="text-xs font-semibold text-[#8899aa] mb-3 uppercase tracking-wider">Immobility Timer</h4>
+            <p class="font-display font-bold text-2xl text-white" id="monitor-immobility">00:00:00</p>
+            <p class="text-[11px] text-[#6b7d95] mt-1">Time since last detected movement</p>
+          </div>
+          <div class="stat-card">
+            <h4 class="text-xs font-semibold text-[#8899aa] mb-3 uppercase tracking-wider">Detection Info</h4>
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between"><span class="text-[#6b7d95]">Method</span><span class="text-white">Frame Differencing</span></div>
+              <div class="flex justify-between"><span class="text-[#6b7d95]">Resolution</span><span class="text-white" id="cam-res">--</span></div>
+              <div class="flex justify-between"><span class="text-[#6b7d95]">FPS</span><span class="text-white" id="cam-fps">--</span></div>
+              <div class="flex justify-between"><span class="text-[#6b7d95]">Threshold</span><span class="text-white">15</span></div>
+            </div>
+          </div>
+          <div class="p-3 rounded-lg bg-brand-500/5 border border-brand-500/15">
+            <p class="text-[11px] text-brand-400"><i class="fas fa-info-circle mr-1.5"></i>In production, MediaPipe Pose tracks 33 body keypoints for precise movement analysis. This demo uses frame differencing as a real-time alternative.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alerts View -->
+    <div class="view" id="view-alerts">
+      <div class="flex items-center justify-between mb-5">
+        <div>
+          <h3 class="font-display font-bold text-xl text-white">Alert Center</h3>
+          <p class="text-sm text-[#6b7d95]">Real-time bedsore risk notifications</p>
+        </div>
+        <button onclick="clearAlerts()" class="btn-secondary text-xs"><i class="fas fa-check-double mr-1.5"></i>Clear All</button>
+      </div>
+      <div id="alerts-list" class="space-y-3"></div>
+      <div id="alerts-empty" class="hidden text-center py-16">
+        <i class="fas fa-check-circle text-3xl text-brand-500/30 mb-3"></i>
+        <p class="text-sm text-[#4a5a70]">All clear — no active alerts</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Patient Detail Modal -->
+<div class="modal-overlay" id="detail-modal">
+  <div class="modal-content" id="detail-content"></div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+/* ===== STATE ===== */
+const state = {
+  patients: {},
+  alerts: [],
+  currentView: 'dashboard',
+  soundEnabled: true,
+  cam: { active: false, stream: null, bedId: null, prevFrame: null, score: 0, fps: 0, frameCount: 0, lastFpsTime: Date.now() },
+  formConditions: [],
+  formMobility: '',
+  alertedSet: new Set() // track which beds already alerted to avoid spam
+};
+
+const BASE_THRESHOLD_MIN = 120;
+const MOVEMENT_THRESHOLD = 15;
+
+/* ===== UTILITY ===== */
+function calcBMI(w, h) { const hm = h / 100; return w / (hm * hm); }
+function bmiCategory(bmi) {
+  if (bmi < 18.5) return 'Underweight';
+  if (bmi < 25) return 'Normal';
+  if (bmi < 30) return 'Overweight';
+  return 'Obese';
+}
+function formatTime(ms) {
+  const totalSec = Math.floor(ms / 1000);
+  const h = String(Math.floor(totalSec / 3600)).padStart(2, '0');
+  const m = String(Math.floor((totalSec % 3600) / 60)).padStart(2, '0');
+  const s = String(totalSec % 60).padStart(2, '0');
+  return `${h}:${m}:${s}`;
+}
+function formatMinutes(ms) { return (ms / 60000).toFixed(1); }
+
+/* ===== RISK ENGINE ===== */
+function getAgeFactor(age) {
+  if (age < 40) return 5;
+  if (age <= 60) return 10;
+  return 20;
+}
+function getConditionFactor(conditions) {
+  let f = 0;
+  if (conditions.includes('diabetes')) f += 20;
+  if (conditions.includes('paralysis')) f += 30;
+  if (conditions.includes('muscle_injury')) f += 15;
+  if (conditions.includes('surgery')) f += 10;
+  return f;
+}
+function getMobilityFactor(mob) {
+  if (mob === 'fully') return 5;
+  if (mob === 'partially') return 15;
+  return 25;
+}
+function calculateRisk(p) {
+  const immobilityMin = (Date.now() - p.lastMovement) / 60000;
+  const ageF = getAgeFactor(p.age);
+  const condF = getConditionFactor(p.conditions);
+  const mobF = getMobilityFactor(p.mobility);
+  const score = (immobilityMin * 0.5) + ageF + condF + mobF;
+  return { score: Math.round(score), immobilityMin, ageF, condF, mobF };
+}
+function getRiskLevel(score) {
+  if (score <= 30) return 'low';
+  if (score <= 60) return 'medium';
+  return 'high';
+}
+function getThresholdTime(p) {
+  const condF = getConditionFactor(p.conditions);
+  return BASE_THRESHOLD_MIN - (condF / 2);
+}
+
+/* ===== PATIENT MANAGEMENT ===== */
+function addPatient(data) {
+  const bmi = calcBMI(data.weight, data.height);
+  const p = {
+    id: data.bed,
+    bed: data.bed,
+    name: data.name,
+    age: data.age,
+    gender: data.gender,
+    height: data.height,
+    weight: data.weight,
+    bmi: Math.round(bmi * 10) / 10,
+    bmiCat: bmiCategory(bmi),
+    conditions: data.conditions,
+    mobility: data.mobility,
+    admissionTime: new Date().toISOString(),
+    lastMovement: Date.now(),
+    // Simulation params
+    simInterval: data.mobility === 'fully' ? (2 + Math.random() * 4) * 60000
+               : data.mobility === 'partially' ? (6 + Math.random() * 12) * 60000
+               : (18 + Math.random() * 25) * 60000,
+    simNextMove: Date.now() + (data.mobility === 'fully' ? (1 + Math.random() * 3) * 60000
+                              : data.mobility === 'partially' ? (4 + Math.random() * 8) * 60000
+                              : (15 + Math.random() * 20) * 60000),
+    riskHistory: []
+  };
+  state.patients[p.id] = p;
+  renderDashboard();
+  updateBedSelect();
+  showToast('info', 'Patient Registered', `${p.name} added to ${p.bed}`);
+}
+
+function removePatient(bedId) {
+  delete state.patients[bedId];
+  state.alertedSet.delete(bedId);
+  if (state.cam.bedId === bedId) stopCamera();
+  renderDashboard();
+  updateBedSelect();
+  renderAlerts();
+}
+
+/* ===== ALERT SYSTEM ===== */
+function checkAndAlert(bedId, risk) {
+  const level = getRiskLevel(risk.score);
+  const thresholdMin = getThresholdTime(state.patients[bedId]);
+  const alertKey = `${bedId}-${level}`;
+
+  if (level === 'low') {
+    state.alertedSet.delete(bedId);
+    return;
+  }
+  if (level === 'medium' && risk.immobilityMin > thresholdMin * 0.7) {
+    if (!state.alertedSet.has(alertKey)) {
+      state.alertedSet.add(alertKey);
+      const alert = { id: Date.now(), bedId, level, type: 'warning', name: state.patients[bedId].name, bed: bedId, score: risk.score, time: new Date().toISOString(), immobility: risk.immobilityMin };
+      state.alerts.unshift(alert);
+      showToast('warning', 'Warning Alert', `${alert.name} at ${alert.bed} — risk score ${alert.score}`);
+      if (state.soundEnabled) playSound('warning');
+      renderAlerts();
+    }
+  }
+  if (level === 'high') {
+    if (!state.alertedSet.has(alertKey)) {
+      state.alertedSet.add(alertKey);
+      const alert = { id: Date.now(), bedId, level, type: 'critical', name: state.patients[bedId].name, bed: bedId, score: risk.score, time: new Date().toISOString(), immobility: risk.immobilityMin };
+      state.alerts.unshift(alert);
+      showToast('critical', 'Critical Alert', `${alert.name} at ${alert.bed} — IMMEDIATE ATTENTION needed!`);
+      if (state.soundEnabled) playSound('critical');
+      renderAlerts();
+    }
+  }
+  // Clean up lower-level alerts for this bed
+  state.alerts = state.alerts.filter(a => {
+    if (a.bedId === bedId && a.level === 'medium' && level === 'high') {
+      state.alertedSet.delete(`${bedId}-medium`);
+      return false;
+    }
+    return true;
+  });
+}
+
+function clearAlerts() {
+  state.alerts = [];
+  state.alertedSet.clear();
+  renderAlerts();
+  updateAlertBadge();
+}
+
+/* ===== SIMULATION ENGINE ===== */
+function runSimulation() {
+  const now = Date.now();
+  for (const [id, p] of Object.entries(state.patients)) {
+    // Simulate movement
+    if (now >= p.simNextMove) {
+      p.lastMovement = now;
+      p.simNextMove = now + p.simInterval * (0.6 + Math.random() * 0.8);
+      // Clear alert state on movement
+      state.alertedSet.delete(`${id}-medium`);
+      state.alertedSet.delete(`${id}-high`);
+    }
+    // Calculate risk
+    const risk = calculateRisk(p);
+    // Record history every 10 seconds
+    if (!p._lastHistory || now - p._lastHistory > 10000) {
+      p.riskHistory.push({ time: now, score: risk.score });
+      if (p.riskHistory.length > 60) p.riskHistory.shift();
+      p._lastHistory = now;
+    }
+    // Check alerts
+    checkAndAlert(id, risk);
+  }
+  // Cleanup stale alerts (patient improved)
+  state.alerts = state.alerts.filter(a => {
+    const p = state.patients[a.bedId];
+    if (!p) return false;
+    const risk = calculateRisk(p);
+    const level = getRiskLevel(risk.score);
+    if (a.level === 'medium' && level === 'low') {
+      state.alertedSet.delete(`${a.bedId}-medium`);
+      return false;
+    }
+    return true;
+  });
+  updateAlertBadge();
+}
+
+/* ===== SOUND SYSTEM ===== */
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playSound(type) {
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    if (type === 'critical') {
+      osc.frequency.value = 880;
+      gain.gain.value = 0.15;
+      osc.start(ctx.currentTime);
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.setValueAtTime(660, ctx.currentTime + 0.15);
+      osc.frequency.setValueAtTime(880, ctx.currentTime + 0.3);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+      osc.stop(ctx.currentTime + 0.6);
+    } else {
+      osc.frequency.value = 520;
+      gain.gain.value = 0.1;
+      osc.start(ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+      osc.stop(ctx.currentTime + 0.3);
+    }
+  } catch(e) {}
+}
+function toggleSound() {
+  state.soundEnabled = !state.soundEnabled;
+  const btn = document.getElementById('sound-btn');
+  btn.innerHTML = state.soundEnabled ? '<i class="fas fa-volume-up text-xs"></i>' : '<i class="fas fa-volume-mute text-xs"></i>';
+}
+
+/* ===== TOAST SYSTEM ===== */
+function showToast(type, title, msg) {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  const iconMap = { critical: 'fa-exclamation-triangle', warning: 'fa-exclamation-circle', info: 'fa-info-circle' };
+  toast.className = `toast toast-${type}`;
+  toast.innerHTML = `
+    <i class="fas ${iconMap[type]} mt-0.5"></i>
+    <div class="flex-1">
+      <p class="text-xs font-semibold mb-0.5">${title}</p>
+      <p class="text-[11px] opacity-80">${msg}</p>
+    </div>
+    <button onclick="this.parentElement.classList.add('removing');setTimeout(()=>this.parentElement.remove(),300)" class="opacity-50 hover:opacity-100 transition-opacity cursor-pointer bg-transparent border-none text-inherit"><i class="fas fa-times text-xs"></i></button>
+  `;
+  container.appendChild(toast);
+  setTimeout(() => { if (toast.parentElement) { toast.classList.add('removing'); setTimeout(() => toast.remove(), 300); }}, 5000);
+}
+
+/* ===== MOTION DETECTION (WEBCAM) ===== */
+async function toggleCamera() {
+  if (state.cam.active) { stopCamera(); return; }
+  const bedId = document.getElementById('monitor-bed-select').value;
+  if (!bedId || !state.patients[bedId]) { showToast('warning', 'Select Bed', 'Please select a patient bed to monitor'); return; }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480, facingMode: 'user' } });
+    state.cam.stream = stream;
+    state.cam.bedId = bedId;
+    state.cam.active = true;
+    state.cam.prevFrame = null;
+    const video = document.getElementById('cam-video');
+    video.srcObject = stream;
+    await video.play();
+    const canvas = document.getElementById('cam-overlay');
+    canvas.width = video.videoWidth || 640;
+    canvas.height = video.videoHeight || 480;
+    document.getElementById('cam-placeholder').style.display = 'none';
+    document.getElementById('cam-toggle-btn').innerHTML = '<i class="fas fa-stop mr-1.5"></i>Stop';
+    document.getElementById('cam-res').textContent = `${canvas.width}x${canvas.height}`;
+    processFrame();
+  } catch(e) {
+    showToast('warning', 'Camera Error', 'Could not access webcam: ' + e.message);
+  }
+}
+function stopCamera() {
+  if (state.cam.stream) { state.cam.stream.getTracks().forEach(t => t.stop()); }
+  state.cam.active = false;
+  state.cam.stream = null;
+  state.cam.bedId = null;
+  state.cam.prevFrame = null;
+  state.cam.score = 0;
+  document.getElementById('cam-video').srcObject = null;
+  const canvas = document.getElementById('cam-overlay');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  document.getElementById('cam-placeholder').style.display = 'flex';
+  document.getElementById('cam-toggle-btn').innerHTML = '<i class="fas fa-play mr-1.5"></i>Start';
+  document.getElementById('mov-score').textContent = '0';
+  document.getElementById('mov-bar').style.width = '0%';
+  document.getElementById('monitor-immobility').textContent = '00:00:00';
+  document.getElementById('cam-fps').textContent = '--';
+}
+
+function processFrame() {
+  if (!state.cam.active) return;
+  const video = document.getElementById('cam-video');
+  const canvas = document.getElementById('cam-overlay');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+
+  // Hidden canvas for pixel data
+  if (!state.cam._hiddenCanvas) {
+    state.cam._hiddenCanvas = document.createElement('canvas');
+    state.cam._hiddenCanvas.width = w;
+    state.cam._hiddenCanvas.height = h;
+    state.cam._hiddenCtx = state.cam._hiddenCanvas.getContext('2d', { willReadFrequently: true });
+  }
+  const hCtx = state.cam._hiddenCtx;
+  hCtx.drawImage(video, 0, 0, w, h);
+  const currentFrame = hCtx.getImageData(0, 0, w, h);
+
+  if (state.cam.prevFrame) {
+    let totalDiff = 0;
+    const diffData = ctx.createImageData(w, h);
+    const cd = currentFrame.data, pd = state.cam.prevFrame.data, dd = diffData.data;
+    // Sample every 4th pixel for performance
+    for (let i = 0; i < cd.length; i += 16) {
+      const diff = Math.abs(cd[i] - pd[i]) + Math.abs(cd[i+1] - pd[i+1]) + Math.abs(cd[i+2] - pd[i+2]);
+      if (diff > 60) {
+        totalDiff += diff;
+        // Draw teal glow on movement pixels
+        dd[i] = 0; dd[i+1] = 212; dd[i+2] = 170;
+        dd[i+3] = Math.min(diff, 160);
+        // Also fill neighboring pixels in the output
+        if (i + 4 < dd.length) { dd[i+4] = 0; dd[i+5] = 212; dd[i+6] = 170; dd[i+7] = dd[i+3] * 0.5; }
+      }
+    }
+    const maxDiff = (w * h / 4) * 300;
+    const normalizedScore = Math.min((totalDiff / maxDiff) * 100, 100);
+    state.cam.score = normalizedScore;
+
+    ctx.putImageData(diffData, 0, 0);
+
+    // Update movement display
+    const moving = normalizedScore > MOVEMENT_THRESHOLD;
+    document.getElementById('mov-score').textContent = Math.round(normalizedScore);
+    document.getElementById('mov-bar').style.width = normalizedScore + '%';
+    document.getElementById('mov-bar').style.background = moving ? 'var(--accent)' : '#ff4757';
+    document.getElementById('mov-status-badge').innerHTML = moving
+      ? '<span class="status-dot moving"></span><span class="text-xs text-brand-400 font-medium">Motion Detected</span>'
+      : '<span class="status-dot still"></span><span class="text-xs text-red-400 font-medium">No Motion</span>';
+
+    // Update patient's lastMovement if motion detected
+    if (moving && state.cam.bedId && state.patients[state.cam.bedId]) {
+      state.patients[state.cam.bedId].lastMovement = Date.now();
+    }
+
+    // Update immobility timer
+    if (state.cam.bedId && state.patients[state.cam.bedId]) {
+      const imm = Date.now() - state.patients[state.cam.bedId].lastMovement;
+      document.getElementById('monitor-immobility').textContent = formatTime(imm);
+    }
+  }
+
+  state.cam.prevFrame = currentFrame;
+
+  // FPS counter
+  state.cam.frameCount++;
+  const now = Date.now();
+  if (now - state.cam.lastFpsTime >= 1000) {
+    state.cam.fps = state.cam.frameCount;
+    state.cam.frameCount = 0;
+    state.cam.lastFpsTime = now;
+    document.getElementById('cam-fps').textContent = state.cam.fps;
+  }
+
+  requestAnimationFrame(processFrame);
+}
+
+/* ===== UI RENDERING ===== */
+function renderDashboard() {
+  const patients = Object.values(state.patients);
+  const grid = document.getElementById('patient-grid');
+  const empty = document.getElementById('empty-state');
+
+  // Stats
+  let critical = 0, warning = 0, stable = 0;
+  patients.forEach(p => {
+    const r = calculateRisk(p);
+    const l = getRiskLevel(r.score);
+    if (l === 'high') critical++;
+    else if (l === 'medium') warning++;
+    else stable++;
+  });
+  document.getElementById('stat-total').textContent = patients.length;
+  document.getElementById('stat-critical').textContent = critical;
+  document.getElementById('stat-warning').textContent = warning;
+  document.getElementById('stat-stable').textContent = stable;
+
+  if (patients.length === 0) { grid.innerHTML = ''; empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+
+  grid.innerHTML = patients.map(p => {
+    const risk = calculateRisk(p);
+    const level = getRiskLevel(risk.score);
+    const cardClass = level === 'high' ? 'critical' : level === 'medium' ? 'medium' : '';
+    const badgeClass = level === 'high' ? 'risk-high' : level === 'medium' ? 'risk-medium' : 'risk-low';
+    const badgeText = level === 'high' ? 'HIGH RISK' : level === 'medium' ? 'MEDIUM' : 'LOW';
+    const isMoving = (Date.now() - p.lastMovement) < 5000;
+    const immMs = Date.now() - p.lastMovement;
+    // Gauge calculation
+    const gaugePct = Math.min(risk.score / 100, 1);
+    const circumference = 2 * Math.PI * 26;
+    const dashoffset = circumference * (1 - gaugePct);
+    const gaugeColor = level === 'high' ? '#ff4757' : level === 'medium' ? '#ffa502' : '#00d4aa';
+
+    return `
+      <div class="patient-card ${cardClass}" onclick="showDetail('${p.bed}')">
+        <div class="flex items-start justify-between mb-3">
+          <div>
+            <p class="text-[11px] text-[#6b7d95] font-medium">${p.bed}</p>
+            <p class="font-display font-bold text-base text-white mt-0.5">${p.name}</p>
+          </div>
+          <span class="risk-badge ${badgeClass}">${badgeText}</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="relative" style="width:62px;height:62px">
+            <svg width="62" height="62" viewBox="0 0 62 62">
+              <circle cx="31" cy="31" r="26" fill="none" stroke="#1a2540" stroke-width="5"/>
+              <circle cx="31" cy="31" r="26" fill="none" stroke="${gaugeColor}" stroke-width="5" stroke-linecap="round"
+                stroke-dasharray="${circumference}" stroke-dashoffset="${dashoffset}" transform="rotate(-90 31 31)" class="gauge-ring"/>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="font-display font-bold text-sm text-white">${risk.score}</span>
+            </div>
+          </div>
+          <div class="flex-1 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] text-[#6b7d95]">Status</span>
+              <span class="flex items-center gap-1.5 text-[11px] font-medium ${isMoving ? 'text-brand-400' : 'text-red-400'}">
+                <span class="status-dot ${isMoving ? 'moving' : 'still'}"></span>${isMoving ? 'Moving' : 'Still'}
+              </span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] text-[#6b7d95]">Immobile</span>
+              <span class="text-[11px] text-white font-medium" data-immobility="${p.bed}">${formatTime(immMs)}</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] text-[#6b7d95]">BMI</span>
+              <span class="text-[11px] text-white">${p.bmi}</span>
+            </div>
+          </div>
+        </div>
+        <div class="mt-3 pt-3 border-t border-[#1a2540] flex items-center justify-between">
+          <span class="text-[10px] text-[#4a5a70]">${p.conditions.length ? p.conditions.map(c=>c.charAt(0).toUpperCase()+c.slice(1).replace('_',' ')).join(', ') : 'No conditions'}</span>
+          <span class="text-[10px] text-brand-500"><i class="fas fa-arrow-right ml-1"></i></span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderAlerts() {
+  const list = document.getElementById('alerts-list');
+  const empty = document.getElementById('alerts-empty');
+  if (state.alerts.length === 0) { list.innerHTML = ''; empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+  list.innerHTML = state.alerts.map(a => {
+    const rowClass = a.type === 'critical' ? 'alert-critical' : 'alert-warning';
+    const icon = a.type === 'critical' ? 'fa-exclamation-triangle text-red-400' : 'fa-exclamation-circle text-yellow-400';
+    const timeAgo = formatTime(Date.now() - new Date(a.time).getTime());
+    return `
+      <div class="alert-row ${rowClass}">
+        <div class="w-10 h-10 rounded-lg ${a.type === 'critical' ? 'bg-red-500/10' : 'bg-yellow-500/10'} flex items-center justify-center flex-shrink-0">
+          <i class="fas ${icon}"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-0.5">
+            <span class="font-semibold text-sm text-white">${a.name}</span>
+            <span class="text-[10px] text-[#6b7d95]">${a.bed}</span>
+            <span class="risk-badge ${a.type === 'critical' ? 'risk-high' : 'risk-medium'}">${a.type === 'critical' ? 'CRITICAL' : 'WARNING'}</span>
+          </div>
+          <p class="text-xs text-[#8899aa]">Risk score: ${a.score} | Immobile for ${a.immobility.toFixed(1)} min</p>
+        </div>
+        <div class="text-right flex-shrink-0">
+          <p class="text-[11px] text-[#6b7d95]">${timeAgo} ago</p>
+          <button onclick="showDetail('${a.bed}')" class="text-[11px] text-brand-500 hover:underline mt-1 cursor-pointer bg-transparent border-none">View</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function updateAlertBadge() {
+  const badge = document.getElementById('alert-badge');
+  const count = state.alerts.filter(a => a.type === 'critical').length;
+  if (count > 0) { badge.textContent = count; badge.classList.remove('hidden'); }
+  else { badge.classList.add('hidden'); }
+}
+
+function updateBedSelect() {
+  const sel = document.getElementById('monitor-bed-select');
+  const current = sel.value;
+  sel.innerHTML = '<option value="">Select bed to monitor...</option>';
+  Object.values(state.patients).forEach(p => {
+    sel.innerHTML += `<option value="${p.bed}">${p.bed} — ${p.name}</option>`;
+  });
+  if (current && state.patients[current]) sel.value = current;
+}
+
+function showDetail(bedId) {
+  const p = state.patients[bedId];
+  if (!p) return;
+  const risk = calculateRisk(p);
+  const level = getRiskLevel(risk.score);
+  const badgeClass = level === 'high' ? 'risk-high' : level === 'medium' ? 'risk-medium' : 'risk-low';
+  const badgeText = level.toUpperCase();
+  const thresholdMin = getThresholdTime(p);
+  const immMs = Date.now() - p.lastMovement;
+  const isMoving = immMs < 5000;
+
+  // Build risk breakdown bars
+  const maxFactor = 30;
+  const bars = [
+    { label: 'Age Factor', value: risk.ageF, color: '#6b7d95' },
+    { label: 'Conditions', value: risk.condF, color: '#ffa502' },
+    { label: 'Mobility', value: risk.mobF, color: '#ff4757' },
+    { label: 'Immobility', value: Math.round(risk.immobilityMin * 0.5), color: '#00d4aa' }
+  ];
+
+  // Pressure points for body visualization
+  const pressureIntensity = Math.min(risk.score / 80, 1);
+  const pressureColor = level === 'high' ? 'rgba(255,71,87,' : level === 'medium' ? 'rgba(255,165,2,' : 'rgba(0,212,170,';
+  const pressurePoints = [
+    { x: 48, y: 88, r: 12, label: 'Shoulders' },
+    { x: 112, y: 88, r: 12, label: 'Shoulders' },
+    { x: 80, y: 170, r: 14, label: 'Sacrum' },
+    { x: 56, y: 182, r: 11, label: 'Hip' },
+    { x: 104, y: 182, r: 11, label: 'Hip' },
+    { x: 60, y: 272, r: 9, label: 'Knee' },
+    { x: 100, y: 272, r: 9, label: 'Knee' },
+    { x: 56, y: 340, r: 10, label: 'Heel' },
+    { x: 104, y: 340, r: 10, label: 'Heel' }
+  ];
+
+  const bodySvg = `
+    <svg viewBox="0 0 160 400" width="160" height="400" class="mx-auto">
+      <defs>
+        <radialGradient id="pg"><stop offset="0%" stop-color="${pressureColor}${pressureIntensity * 0.8})"/><stop offset="100%" stop-color="${pressureColor}0)"/></radialGradient>
+      </defs>
+      <circle cx="80" cy="32" r="22" fill="#131c2d" stroke="#243050" stroke-width="1.2"/>
+      <rect x="70" y="52" width="20" height="10" rx="3" fill="#131c2d" stroke="#243050" stroke-width="1"/>
+      <rect x="42" y="62" width="76" height="110" rx="10" fill="#131c2d" stroke="#243050" stroke-width="1.2"/>
+      <rect x="18" y="68" width="24" height="80" rx="10" fill="#131c2d" stroke="#243050" stroke-width="1.2"/>
+      <rect x="118" y="68" width="24" height="80" rx="10" fill="#131c2d" stroke="#243050" stroke-width="1.2"/>
+      <rect x="48" y="172" width="28" height="155" rx="10" fill="#131c2d" stroke="#243050" stroke-width="1.2"/>
+      <rect x="84" y="172" width="28" height="155" rx="10" fill="#131c2d" stroke="#243050" stroke-width="1.2"/>
+      ${pressurePoints.map(pt => `
+        <circle cx="${pt.x}" cy="${pt.y}" r="${pt.r * (0.6 + pressureIntensity * 0.5)}" fill="url(#pg)" class="pressure-point ${level === 'high' ? 'pressure-hot' : ''}"/>
+        <circle cx="${pt.x}" cy="${pt.y}" r="2.5" fill="${level === 'high' ? '#ff4757' : level === 'medium' ? '#ffa502' : '#00d4aa'}" opacity="0.9"/>
+      `).join('')}
+    </svg>
+  `;
+
+  // Risk history mini chart (SVG sparkline)
+  const history = p.riskHistory.length > 2 ? p.riskHistory : [];
+  let sparkline = '';
+  if (history.length > 1) {
+    const maxScore = Math.max(...history.map(h => h.score), 1);
+    const minScore = Math.min(...history.map(h => h.score), 0);
+    const range = maxScore - minScore || 1;
+    const points = history.map((h, i) => {
+      const x = (i / (history.length - 1)) * 200;
+      const y = 50 - ((h.score - minScore) / range) * 40;
+      return `${x},${y}`;
+    }).join(' ');
+    sparkline = `
+      <svg viewBox="0 0 200 55" width="100%" height="55" preserveAspectRatio="none">
+        <polyline points="${points}" fill="none" stroke="${level === 'high' ? '#ff4757' : level === 'medium' ? '#ffa502' : '#00d4aa'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        ${history.map((h, i) => {
+          const x = (i / (history.length - 1)) * 200;
+          const y = 50 - ((h.score - minScore) / range) * 40;
+          return `<circle cx="${x}" cy="${y}" r="2" fill="${getRiskLevel(h.score) === 'high' ? '#ff4757' : getRiskLevel(h.score) === 'medium' ? '#ffa502' : '#00d4aa'}"/>`;
+        }).join('')}
+        <line x1="0" y1="50" x2="200" y2="50" stroke="#1a2540" stroke-width="0.5"/>
+        <line x1="0" y1="30" x2="200" y2="30" stroke="#1a2540" stroke-width="0.5" stroke-dasharray="3"/>
+        <line x1="0" y1="10" x2="200" y2="10" stroke="#1a2540" stroke-width="0.5" stroke-dasharray="3"/>
+        <text x="2" y="48" fill="#4a5a70" font-size="7">0</text>
+        <text x="2" y="28" fill="#4a5a70" font-size="7">${Math.round(minScore + range * 0.5)}</text>
+        <text x="2" y="8" fill="#4a5a70" font-size="7">${maxScore}</text>
+      </svg>
+    `;
+  } else {
+    sparkline = '<p class="text-xs text-[#4a5a70] text-center py-4">Collecting data...</p>';
+  }
+
+  document.getElementById('detail-content').innerHTML = `
+    <div class="p-6">
+      <div class="flex items-start justify-between mb-6">
+        <div>
+          <p class="text-xs text-[#6b7d95] mb-1">${p.bed}</p>
+          <h3 class="font-display font-bold text-xl text-white">${p.name}</h3>
+          <div class="flex items-center gap-3 mt-2 text-xs text-[#8899aa]">
+            <span>${p.age} yrs, ${p.gender}</span>
+            <span class="text-[#243050]">|</span>
+            <span>BMI ${p.bmi} (${p.bmiCat})</span>
+            <span class="text-[#243050]">|</span>
+            <span class="flex items-center gap-1.5"><span class="status-dot ${isMoving ? 'moving' : 'still'}"></span>${isMoving ? 'Moving' : 'Still'}</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="risk-badge ${badgeClass} text-sm">${badgeText}</span>
+          <button onclick="closeDetail()" class="w-8 h-8 rounded-lg bg-sf-700 border border-[#1a2540] flex items-center justify-center text-[#6b7d95] hover:text-white transition-colors cursor-pointer"><i class="fas fa-times text-xs"></i></button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-5">
+        <!-- Left: Info + Risk Breakdown -->
+        <div class="col-span-1 space-y-4">
+          <div class="p-4 rounded-xl bg-sf-800 border border-[#1a2540]">
+            <h4 class="text-xs font-semibold text-[#8899aa] uppercase tracking-wider mb-3">Patient Info</h4>
+            <div class="space-y-2.5 text-xs">
+              <div class="flex justify-between"><span class="text-[#6b7d95]">Height</span><span class="text-white">${p.height} cm</span></div>
+              <div class="flex justify-between"><span class="text-[#6b7d95]">Weight</span><span class="text-white">${p.weight} kg</span></div>
+              <div class="flex justify-between"><span class="text-[#6b7d95]">Mobility</span><span class="text-white capitalize">${p.mobility} Mobile</span></div>
+              <div class="flex justify-between"><span class="text-[#6b7d95]">Admitted</span><span class="text-white">${new Date(p.admissionTime).toLocaleTimeString()}</span></div>
+              <div class="flex justify-between"><span class="text-[#6b7d95]">Immobile For</span><span class="text-white font-semibold">${formatMinutes(immMs)} min</span></div>
+              <div class="flex justify-between"><span class="text-[#6b7d95]">Alert Threshold</span><span class="text-white">${thresholdMin.toFixed(0)} min</span></div>
+            </div>
+          </div>
+          <div class="p-4 rounded-xl bg-sf-800 border border-[#1a2540]">
+            <h4 class="text-xs font-semibold text-[#8899aa] uppercase tracking-wider mb-3">Conditions</h4>
+            ${p.conditions.length ? p.conditions.map(c => `<span class="inline-block px-2.5 py-1 rounded-md bg-sf-600 text-xs text-[#c8d6e5] mr-1.5 mb-1.5">${c.charAt(0).toUpperCase() + c.slice(1).replace('_',' ')}</span>`).join('') : '<p class="text-xs text-[#4a5a70]">None reported</p>'}
+          </div>
+          <button onclick="removePatient('${p.bed}');closeDetail()" class="btn-secondary w-full text-xs text-red-400 border-red-500/20 hover:bg-red-500/5"><i class="fas fa-trash mr-1.5"></i>Remove Patient</button>
+        </div>
+
+        <!-- Center: Pressure Map -->
+        <div class="col-span-1">
+          <div class="p-4 rounded-xl bg-sf-800 border border-[#1a2540]">
+            <h4 class="text-xs font-semibold text-[#8899aa] uppercase tracking-wider mb-3">Body Pressure Map</h4>
+            ${bodySvg}
+            <div class="flex items-center justify-center gap-4 mt-3 text-[10px] text-[#6b7d95]">
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-brand-500/50"></span>Low</span>
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></span>Medium</span>
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-red-500/50"></span>High</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Risk Analysis -->
+        <div class="col-span-1 space-y-4">
+          <div class="p-4 rounded-xl bg-sf-800 border border-[#1a2540] text-center">
+            <h4 class="text-xs font-semibold text-[#8899aa] uppercase tracking-wider mb-3">Risk Score</h4>
+            <div class="relative inline-block" style="width:100px;height:100px">
+              <svg width="100" height="100" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="42" fill="none" stroke="#1a2540" stroke-width="7"/>
+                <circle cx="50" cy="50" r="42" fill="none" stroke="${level === 'high' ? '#ff4757' : level === 'medium' ? '#ffa502' : '#00d4aa'}" stroke-width="7" stroke-linecap="round"
+                  stroke-dasharray="${2*Math.PI*42}" stroke-dashoffset="${2*Math.PI*42*(1-Math.min(risk.score/100,1))}" transform="rotate(-90 50 50)" class="gauge-ring"/>
+              </svg>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <span class="font-display font-bold text-2xl text-white">${risk.score}</span>
+              </div>
+            </div>
+          </div>
+          <div class="p-4 rounded-xl bg-sf-800 border border-[#1a2540]">
+            <h4 class="text-xs font-semibold text-[#8899aa] uppercase tracking-wider mb-3">Risk Breakdown</h4>
+            <div class="space-y-3">
+              ${bars.map(b => `
+                <div>
+                  <div class="flex items-center justify-between text-[11px] mb-1">
+                    <span class="text-[#8899aa]">${b.label}</span>
+                    <span class="text-white font-medium">+${b.value}</span>
+                  </div>
+                  <div class="h-1.5 rounded bg-[#131c2d] overflow-hidden">
+                    <div class="h-full rounded" style="width:${Math.min(b.value/maxFactor*100,100)}%;background:${b.color}"></div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          <div class="p-4 rounded-xl bg-sf-800 border border-[#1a2540]">
+            <h4 class="text-xs font-semibold text-[#8899aa] uppercase tracking-wider mb-2">Risk History</h4>
+            ${sparkline}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('detail-modal').classList.add('show');
+}
+
+function closeDetail() {
+  document.getElementById('detail-modal').classList.remove('show');
+}
+
+/* ===== NAVIGATION ===== */
+function navigateTo(view) {
+  state.currentView = view;
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.view === view));
+  const titles = { 'dashboard': 'Dashboard', 'add-patient': 'Patient Intake', 'monitoring': 'Live Monitoring', 'alerts': 'Alert Center' };
+  document.getElementById('page-title').textContent = titles[view] || 'Dashboard';
+  if (view === 'dashboard') renderDashboard();
+  if (view === 'alerts') renderAlerts();
+}
+
+/* ===== FORM HANDLERS ===== */
+function toggleCondition(el) {
+  const cond = el.dataset.cond;
+  if (el.classList.contains('active-danger')) {
+    el.classList.remove('active-danger');
+    state.formConditions = state.formConditions.filter(c => c !== cond);
+  } else {
+    el.classList.add('active-danger');
+    state.formConditions.push(cond);
+  }
+  document.getElementById('f-conditions').value = JSON.stringify(state.formConditions);
+}
+
+function selectMobility(el) {
+  document.querySelectorAll('.mobility-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  state.formMobility = el.dataset.mob;
+  document.getElementById('f-mobility').value = state.formMobility;
+}
+
+function handleAddPatient(e) {
+  e.preventDefault();
+  const bed = document.getElementById('f-bed').value.trim();
+  const name = document.getElementById('f-name').value.trim();
+  const age = parseInt(document.getElementById('f-age').value);
+  const gender = document.getElementById('f-gender').value;
+  const height = parseInt(document.getElementById('f-height').value);
+  const weight = parseInt(document.getElementById('f-weight').value);
+
+  if (state.patients[bed]) { showToast('warning', 'Duplicate Bed', `Bed ${bed} is already occupied`); return; }
+  if (!state.formMobility) { showToast('warning', 'Missing Field', 'Please select a mobility level'); return; }
+
+  addPatient({ bed, name, age, gender, height, weight, conditions: [...state.formConditions], mobility: state.formMobility });
+
+  // Reset form
+  document.getElementById('patient-form').reset();
+  document.getElementById('live-bmi').textContent = '--';
+  document.getElementById('bmi-category').textContent = '';
+  document.querySelectorAll('.toggle-pill').forEach(t => t.classList.remove('active-danger'));
+  document.querySelectorAll('.mobility-card').forEach(c => c.classList.remove('selected'));
+  state.formConditions = [];
+  state.formMobility = '';
+  document.getElementById('f-conditions').value = '[]';
+  document.getElementById('f-mobility').value = '';
+
+  navigateTo('dashboard');
+}
+
+// Live BMI calculation
+document.getElementById('f-height').addEventListener('input', updateLiveBMI);
+document.getElementById('f-weight').addEventListener('input', updateLiveBMI);
+function updateLiveBMI() {
+  const h = parseFloat(document.getElementById('f-height').value);
+  const w = parseFloat(document.getElementById('f-weight').value);
+  if (h > 0 && w > 0) {
+    const bmi = calcBMI(w, h);
+    document.getElementById('live-bmi').textContent = bmi.toFixed(1);
+    document.getElementById('bmi-category').textContent = `(${bmiCategory(bmi)})`;
+  } else {
+    document.getElementById('live-bmi').textContent = '--';
+    document.getElementById('bmi-category').textContent = '';
+  }
+}
+
+/* ===== CLOCK ===== */
+function updateClock() {
+  const now = new Date();
+  document.getElementById('live-clock').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
+/* ===== FAST UPDATE (timers on cards) ===== */
+function fastUpdate() {
+  // Update immobility timers on dashboard cards
+  document.querySelectorAll('[data-immobility]').forEach(el => {
+    const bedId = el.dataset.immobility;
+    const p = state.patients[bedId];
+    if (p) {
+      el.textContent = formatTime(Date.now() - p.lastMovement);
+    }
+  });
+  // Update monitor view immobility if camera is off
+  if (!state.cam.active && state.cam.bedId && state.patients[state.cam.bedId]) {
+    const imm = Date.now() - state.patients[state.cam.bedId].lastMovement;
+    document.getElementById('monitor-immobility').textContent = formatTime(imm);
+  }
+}
+
+/* ===== SAMPLE DATA ===== */
+function loadSampleData() {
+  const samples = [
+    { bed: 'BED-01', name: 'Rahul Sharma', age: 65, gender: 'Male', height: 170, weight: 79, conditions: ['diabetes'], mobility: 'immobile', hoursAgo: 3.5 },
+    { bed: 'BED-02', name: 'Priya Patel', age: 45, gender: 'Female', height: 162, weight: 58, conditions: ['surgery'], mobility: 'partially', hoursAgo: 2 },
+    { bed: 'BED-03', name: 'Amit Kumar', age: 72, gender: 'Male', height: 168, weight: 75, conditions: ['diabetes', 'paralysis'], mobility: 'immobile', hoursAgo: 5 },
+    { bed: 'BED-04', name: 'Sneha Reddy', age: 35, gender: 'Female', height: 165, weight: 55, conditions: [], mobility: 'fully', hoursAgo: 1 },
+    { bed: 'BED-05', name: 'Mohammed Irfan', age: 58, gender: 'Male', height: 175, weight: 82, conditions: ['muscle_injury', 'surgery'], mobility: 'partially', hoursAgo: 4 },
+    { bed: 'BED-06', name: 'Lakshmi Nair', age: 80, gender: 'Female', height: 155, weight: 60, conditions: ['diabetes', 'paralysis', 'surgery'], mobility: 'immobile', hoursAgo: 6 }
+  ];
+  samples.forEach(s => {
+    const bmi = calcBMI(s.weight, s.height);
+    const p = {
+      id: s.bed, bed: s.bed, name: s.name, age: s.age, gender: s.gender,
+      height: s.height, weight: s.weight,
+      bmi: Math.round(bmi * 10) / 10, bmiCat: bmiCategory(bmi),
+      conditions: s.conditions, mobility: s.mobility,
+      admissionTime: new Date(Date.now() - s.hoursAgo * 3600000).toISOString(),
+      lastMovement: Date.now() - (s.mobility === 'immobile' ? (40 + Math.random() * 60) * 60000
+                                 : s.mobility === 'partially' ? (10 + Math.random() * 20) * 60000
+                                 : (1 + Math.random() * 5) * 60000),
+      simInterval: s.mobility === 'fully' ? (2 + Math.random() * 4) * 60000
+                 : s.mobility === 'partially' ? (6 + Math.random() * 12) * 60000
+                 : (18 + Math.random() * 25) * 60000,
+      simNextMove: Date.now() + (s.mobility === 'fully' ? (1 + Math.random() * 3) * 60000
+                                : s.mobility === 'partially' ? (4 + Math.random() * 8) * 60000
+                                : (15 + Math.random() * 20) * 60000),
+      riskHistory: [],
+      _lastHistory: 0
+    };
+    // Generate some fake history
+    const now = Date.now();
+    for (let i = 10; i >= 0; i--) {
+      const fakeTime = now - i * 10000;
+      const fakeImmMin = (fakeTime - p.lastMovement) / 60000;
+      const fakeScore = Math.round((fakeImmMin * 0.5) + getAgeFactor(p.age) + getConditionFactor(p.conditions) + getMobilityFactor(p.mobility));
+      p.riskHistory.push({ time: fakeTime, score: Math.max(0, fakeScore) });
+    }
+    state.patients[p.id] = p;
+  });
+}
+
+/* ===== INIT ===== */
+function init() {
+  loadSampleData();
+  renderDashboard();
+  updateBedSelect();
+  updateClock();
+
+  // Navigation event listeners
+  document.querySelectorAll('.nav-item[data-view]').forEach(n => {
+    n.addEventListener('click', () => navigateTo(n.dataset.view));
+  });
+
+  // Modal close on overlay click
+  document.getElementById('detail-modal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeDetail();
+  });
+
+  // Simulation loop — runs every 2 seconds
+  setInterval(() => {
+    runSimulation();
+    if (state.currentView === 'dashboard') renderDashboard();
+    if (state.currentView === 'alerts') renderAlerts();
+  }, 2000);
+
+  // Fast timer update — every 1 second
+  setInterval(fastUpdate, 1000);
+
+  // Clock update
+  setInterval(updateClock, 1000);
+}
+
+init();
+</script>
+</body>
+</html>
