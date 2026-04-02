@@ -190,7 +190,15 @@ select.fi option{background:#ffffff;color:#111827}
           <div class="grid grid-cols-2 gap-5 mb-5"><div><label class="text-xs font-bold text-gray-600 mb-2 block uppercase tracking-wide">Age</label><input type="number" id="f-age" class="fi" placeholder="Years" min="1" max="120" required></div><div><label class="text-xs font-bold text-gray-600 mb-2 block uppercase tracking-wide">Gender</label><select id="f-gender" class="fi" required><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div></div>
           <div class="grid grid-cols-2 gap-5 mb-5"><div><label class="text-xs font-bold text-gray-600 mb-2 block uppercase tracking-wide">Height (cm)</label><input type="number" id="f-ht" class="fi" placeholder="170" min="50" max="250" required></div><div><label class="text-xs font-bold text-gray-600 mb-2 block uppercase tracking-wide">Weight (kg)</label><input type="number" id="f-wt" class="fi" placeholder="70" min="10" max="300" required></div></div>
           <div class="mb-6 p-4 rounded-lg bg-gray-50 border border-gray-200 flex items-center gap-3"><span class="text-xs font-bold text-gray-500 uppercase">Auto-calculated BMI:</span><span class="font-display font-bold text-xl text-gray-900" id="live-bmi">--</span><span class="text-xs font-bold text-gray-500" id="bmi-cat"></span></div>
-          <div class="mb-6"><label class="text-xs font-bold text-gray-600 mb-3 block uppercase tracking-wide">Medical Conditions</label><div class="flex flex-wrap gap-2"><span class="pill" data-c="diabetes" onclick="toggleCond(this)"><i class="fas fa-syringe mr-1.5 text-[10px]"></i>Diabetes</span><span class="pill" data-c="paralysis" onclick="toggleCond(this)"><i class="fas fa-wheelchair mr-1.5 text-[10px]"></i>Paralysis</span><span class="pill" data-c="muscle_injury" onclick="toggleCond(this)"><i class="fas fa-band-aid mr-1.5 text-[10px]"></i>Muscle Injury</span><span class="pill" data-c="surgery" onclick="toggleCond(this)"><i class="fas fa-cut mr-1.5 text-[10px]"></i>Surgery History</span></div></div>
+          <div class="mb-6"><label class="text-xs font-bold text-gray-600 mb-3 block uppercase tracking-wide">Medical Conditions</label><div class="flex flex-wrap gap-2">
+  <span class="pill" data-c="diabetes" onclick="toggleCond(this)"><i class="fas fa-syringe mr-1.5 text-[10px]"></i>Diabetes</span>
+  <span class="pill" data-c="paralysis" onclick="toggleCond(this)"><i class="fas fa-wheelchair mr-1.5 text-[10px]"></i>Paralysis</span>
+  <span class="pill" data-c="vascular_disease" onclick="toggleCond(this)"><i class="fas fa-heart-pulse mr-1.5 text-[10px]"></i>Vascular Disease</span>
+  <span class="pill" data-c="neuropathy" onclick="toggleCond(this)"><i class="fas fa-brain mr-1.5 text-[10px]"></i>Neuropathy</span>
+  <span class="pill" data-c="kidney_disease" onclick="toggleCond(this)"><i class="fas fa-vial mr-1.5 text-[10px]"></i>Kidney Disease</span>
+  <span class="pill" data-c="muscle_injury" onclick="toggleCond(this)"><i class="fas fa-band-aid mr-1.5 text-[10px]"></i>Muscle Injury</span>
+  <span class="pill" data-c="surgery" onclick="toggleCond(this)"><i class="fas fa-cut mr-1.5 text-[10px]"></i>Surgery History</span>
+</div></div>
           <div class="mb-8"><label class="text-xs font-bold text-gray-600 mb-3 block uppercase tracking-wide">Mobility Level</label><div class="flex gap-4"><div class="mob-card" data-m="fully" onclick="selectMob(this)"><i class="fas fa-walking text-2xl text-brand-600 mb-3"></i><p class="text-sm font-bold text-gray-900">Fully Mobile</p><p class="text-[11px] font-medium text-gray-500 mt-1">Independent</p></div><div class="mob-card" data-m="partially" onclick="selectMob(this)"><i class="fas fa-crutch text-2xl text-yellow-500 mb-3"></i><p class="text-sm font-bold text-gray-900">Partially Mobile</p><p class="text-[11px] font-medium text-gray-500 mt-1">Needs assistance</p></div><div class="mob-card" data-m="immobile" onclick="selectMob(this)"><i class="fas fa-bed text-2xl text-red-500 mb-3"></i><p class="text-sm font-bold text-gray-900">Immobile</p><p class="text-[11px] font-medium text-gray-500 mt-1">Bedridden</p></div></div></div>
           <button type="submit" class="btn btn-p w-full text-base py-3"><i class="fas fa-plus mr-2"></i>Register Patient</button>
         </form>
@@ -294,7 +302,7 @@ select.fi option{background:#ffffff;color:#111827}
 
 <script>
 /* ========== CONFIG ========== */
-const CFG = { BASE_TH: 120, MOVE_TH: 5, HIST_MAX: 60, HIST_INT: 10000 };
+const CFG = { BASE_TH: 120, MOVE_TH: 20, HIST_MAX: 60, HIST_INT: 10000 };
 
 /* ========== STATE ========== */
 const S = {
@@ -314,9 +322,14 @@ function fmtMs(ms) { const s = Math.floor(Math.max(0, ms) / 1000); return `${Str
 function fmtMin(ms) { return (Math.max(0, ms) / 60000).toFixed(1); }
 
 /* ========== NEW QUADRATIC RISK ENGINE ========== */
-function ageW(a) { return a < 40 ? 5 : a <= 60 ? 10 : 20; }
-function condW(c) { let w = 0; const m = { diabetes: 20, paralysis: 30, muscle_injury: 15, surgery: 10 }; c.forEach(x => { if (m[x]) w += m[x]; }); return w; }
-function mobW(m) { return m === 'fully' ? 5 : m === 'partially' ? 15 : 25; }
+function ageW(a) { return a < 40 ? 0 : a <= 60 ? 5 : 10; }
+function mobW(m) { return m === 'fully' ? 0 : m === 'partially' ? 10 : 20; }
+function condW(c) { 
+  let w = 0; 
+  const m = { diabetes: 8, paralysis: 15, vascular_disease: 12, neuropathy: 10, kidney_disease: 8, muscle_injury: 5, surgery: 5 }; 
+  c.forEach(x => { if (m[x]) w += m[x]; }); 
+  return Math.min(w, 25); // Cap condition weight at 25 so it doesn't break the scale
+}
 
 function calcRisk(p) { 
   const im = (Date.now() - p.lastMovement) / 60000; 
@@ -337,7 +350,24 @@ function calcRisk(p) {
 }
 
 function riskLv(s) { return s <= 30 ? 'low' : s <= 60 ? 'medium' : 'high'; }
-function thMin(p) { return CFG.BASE_TH - (condW(p.conditions) / 2); }
+function thMin(p) { 
+  // Calculate the patient's base risk without time
+  const baseRisk = ageW(p.age) + condW(p.conditions) + mobW(p.mobility);
+  
+  // Calculate how much risk score is left before hitting High Risk (>60)
+  const targetTimeRisk = 61 - baseRisk; 
+  
+  if (targetTimeRisk <= 0) return 0; // Extremely high risk patients might be critical immediately
+  
+  if (targetTimeRisk <= 15) {
+     // Linear phase calculation (under 30 mins)
+     return targetTimeRisk / 0.5; 
+  } else {
+     // Quadratic phase calculation (over 30 mins)
+     // Solved algebraically for 'im': target = 15 + (im - 30)^2 * 0.02
+     return 30 + Math.sqrt((targetTimeRisk - 15) / 0.02); 
+  }
+}
 
 /* ========== PATIENT MANAGEMENT ========== */
 function mkSim(mob) {
